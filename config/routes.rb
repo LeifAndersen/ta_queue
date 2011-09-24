@@ -5,12 +5,12 @@ TaQueue::Application.routes.draw do
 
   get "pages/logout"
 
-  resources :classes do
+  resources :boards do
     resources :tas
     resources :students
   end
 
-  root :to => "classes#show"
+  root :to => "boards#show"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

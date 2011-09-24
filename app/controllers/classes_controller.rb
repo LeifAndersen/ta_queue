@@ -5,7 +5,7 @@ class ClassesController < ApplicationController
   def show
     respond_with do |format|
       format.html { render :show }
-      format.json { render :json => Queue.state }
+      format.json { render :json => @board.state }
     end
   end
 
