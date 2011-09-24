@@ -1,3 +1,82 @@
-// Place all the styles related to the boards controller here.
+// Place all the styles related to the TaBoards controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#content
+{
+	display: inline-block;
+	width: 44em;
+	height: auto;
+	border: solid 1px #000;
+}
+
+#header
+{
+	height: auto;
+	padding: 0.5em;
+}
+
+#body
+{
+	width: 44em;
+	height: 30em;
+}
+
+#list
+{
+	height: 28em;
+	width: 20em;
+	padding: 1em;
+	float: left;
+}
+
+#list_header
+{
+	height: 1em;
+	width: 20em;
+}
+
+#inner_list
+{
+	outline: solid 1px #000;
+	width: 18em;
+	height: 22em;
+	padding: 1em;
+}
+
+#list_buttons
+{
+	height: 1.5em;
+	padding: 0.5em;
+	text-align: right;
+	width: 20em;
+}
+
+#discussion
+{
+	height: 28em;
+	width: 20em;
+	padding: 1em;
+	float: left;
+}
+
+#discussion_header
+{
+	height: 1em;
+	width: 20em;
+}
+
+#inner_discussion
+{
+	outline: solid 1px #000;
+	height: 25em;
+	width: 20em;
+}
+
+#discussion_buttons
+{
+	height: 1.5em;
+	padding: 0.5em;
+	text-align: right;
+	width: 20em;
+}
