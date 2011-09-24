@@ -1,0 +1,131 @@
+======================
+      QUEUE API
+======================
+
+POST /classes/:class_name/login
+  Parameters: (JSON/XML)
+    {
+      name:"some_name"
+      location:"some_location"    // Optional
+      ta_password:"some_password" // Optional
+    }
+  Response: (JSON/XML)
+    Success code: 200
+    {
+      id:some_id // This should be kept around for use in all other request
+      token:some_token // Students only have access to the the stupent API, and TA's have access to both
+    }
+
+    Failure code: 401 // If, for example, you supply to wrong ta password
+    {
+      password: "You supplied an invalid password"
+    }
+
+GET /classes/:class_name
+  Format: HTML - Shows the queue for the user (uses session variable to find who it is)
+  Response: (JSON/XML)
+    Success code: 200
+    {
+      students: 
+      [ 
+        student: 
+        { 
+          id:some_id_1,
+          name:"user1", 
+          location:"location1" 
+        },
+        student: 
+        { 
+          id:some_id_2,
+          name:"user2", 
+          location:"location2" 
+        }
+      ]
+      tas:
+      [
+        ta:
+        {
+          id:some_ta_id_1,
+          name:"ta1",
+          location:"ta_location_1",
+          currently_helping:some_student_id
+        },
+        ta:
+        {
+          id:some_ta_id_2,
+          name:"ta2",
+          location:"ta_location_2",
+          currently_helping:some_student_id
+        }
+      ]
+    }
+
+=========================
+        TA API
+=========================
+	
+POST /classes/:class_name/tas/:ta_id
+  Parameters:
+    {
+      ta_token:"some_token",
+
+      // Below are optional parameters
+
+      accept_student:"student_id",
+      logout:true                 // Passing false here will result in a nop
+    }
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    { }
+    Failure code: 403 (Forbidden)
+    { }
+
+GET /classes/:class_name/tas/:ta_id
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    {
+      user:
+      { 
+        id:some_id_2,
+        name:"user2", 
+        location:"location2" 
+      }
+    }
+
+    Failure code: 403 (Forbidden)
+    { }
+
+=========================
+      STUDENT API
+=========================
+
+POST /classes/:class_name/students/:student_id
+  Parameters:
+  {
+    token:"some_token"
+
+    // Below are optional parameters
+
+    in_queue:true/false,   // true puts the student in the queue, false removes them
+    logout:true           // Passing false here results in a nop
+  }
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    { }
+    Failure code: 403 (Forbidden)
+    { }
+	
+GET /classes/:class_name/students/:student_id
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    {
+      user:
+      { 
+        id:some_id_2,
+        name:"user2", 
+        location:"location2" 
+      }
+    }
+
+    Failure code: 403 (Forbidden)
+    { }
