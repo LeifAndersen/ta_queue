@@ -1,0 +1,2 @@
+class TasController < ApplicationController
+end
