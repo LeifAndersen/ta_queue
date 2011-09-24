@@ -1,3 +1,4 @@
 class Student < User
-  belongs_to :queue
+  belongs_to :board
+  field :in_queue, type: Boolean
 end

@@ -1,3 +1,3 @@
-class TA < User
-  belongs_to :queue
+class Ta < User
+  belongs_to :board
 end
