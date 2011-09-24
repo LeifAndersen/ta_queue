@@ -7,6 +7,7 @@ gem 'passenger'
 gem 'execjs'
 gem 'haml'
 gem 'therubyracer'
+gem 'haml'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'

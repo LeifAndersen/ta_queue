@@ -1,0 +1,37 @@
+#header
+  Logged in as <b>Michael Hogenson</b>
+  %br/
+  Currently assigned to <b>Joe @ 3-55</b>
+  %br/
+  %input{ :type => "button", :value => "Accept Next" }
+  %ul
+    - @ta_board.users.tas.each do |ta|
+      %li
+        = "TA: #{ta.name} currently assigned to"
+        %b some student
+#body
+  #list
+    #list_header
+      TA Queue
+    %ul#inner_list
+      - @ta_board.users.students.each do |user|
+        %li
+          %span.name= user.name
+          %span.location= user.location
+    #list_buttons
+      %input{ :type => "button", :value => "Freeze" }
+  #discussion
+    #discussion_header
+    #inner_discussion
+    #discussion_buttons 
+  
+  
+  
+  -#.lists
+    - if false && :student?
+      %li{ :id => (@user.admin? ? "admin_row" : "student_row") + "-" + @user.id.to_s }
+    - if :admin?
+      Admin stuff here
+      
+      <li id="admin_row-1"> </li>
+  
