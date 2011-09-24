@@ -5,18 +5,18 @@
   %br/
   %input{ :type => "button", :value => "Accept Next" }
   %ul
-    - @ta_board.users.tas.each do |ta|
+    - @board.tas.each do |ta|
       %li
-        = "TA: #{ta.name} currently assigned to"
+        = "TA: #{ta.username} currently assigned to"
         %b some student
 #body
   #list
     #list_header
       TA Queue
     %ul#inner_list
-      - @ta_board.users.students.each do |user|
+      - @board.students.each do |user|
         %li
-          %span.name= user.name
+          %span.name= user.username
           %span.location= user.location
     #list_buttons
       %input{ :type => "button", :value => "Freeze" }

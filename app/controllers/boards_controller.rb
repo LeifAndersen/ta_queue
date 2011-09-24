@@ -3,6 +3,7 @@ class BoardsController < ApplicationController
   before_filter :get_queue
 
   def show
+    
     respond_with do |format|
       format.html { render :show }
       format.json { render :json => @board.state }
@@ -11,6 +12,6 @@ class BoardsController < ApplicationController
 
   private
     def get_queue
-      @board = Board.where(:title => params[:id])
+      @board = Board.where(:title => params[:id]).first
     end
 end
