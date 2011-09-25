@@ -5,6 +5,9 @@ class User
   field :token, type: String
   field :location, type: String
 
+  validates :username, :token, :presence => true
+  validates :username, :uniqueness => true
+
   def self.as_jsn
     arr = []
     all.each do |user|

@@ -3,6 +3,8 @@ TaQueue::Application.routes.draw do
 
   resources :boards do
     get "login"
+    get "logout"
+    post "logout"
     post "login_user"
     resources :tas
     resources :students
