@@ -3,7 +3,7 @@ class BoardsController < ApplicationController
   before_filter :get_board
 
   def show
-    @current_user = User.find(session['user_id'])
+    @current_user = User.where(:id => session['user_id']).first
     if @current_user.nil?
       redirect_to board_login_path
     end
