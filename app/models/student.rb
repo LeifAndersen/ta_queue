@@ -3,6 +3,8 @@ class Student < User
   belongs_to :ta, polymorphic: true
   field :in_queue, type: Boolean
 
+  validates :location, :presence => true
+
   def output_hash
     hash = {}
     hash[:id] = id

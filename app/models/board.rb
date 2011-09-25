@@ -13,4 +13,8 @@ class Board
     hash[:students] = students.as_jsn
     hash
   end
+
+  def to_param
+    self.title
+  end
 end
