@@ -13,4 +13,12 @@ class User
     arr
   end
 
+  def ta?
+    self.class == Ta
+  end
+
+  def student?
+    self.class == Student
+  end
+
 end

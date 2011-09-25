@@ -3,9 +3,7 @@ class BoardsController < ApplicationController
   before_filter :get_board
 
   def show
-    @ta_signed_in = true
-    @student_signed_in = false
-    @current_user = Ta.find(session["ta_id"])
+    @current_user = User.find(session["ta_id"])
     respond_with do |format|
       format.html { render :show }#render :json => @board.state }
       format.json { render :json => @board.state }
@@ -22,8 +20,8 @@ class BoardsController < ApplicationController
     session[:ta_id] = @user.id.to_s
 
     respond_with do |f|
-      #format.html { redirect_to @board }
-      f.html { render :json => { :id => @user.id, :token => @user.token } }
+      f.html { redirect_to @board }
+      f.json { render :json => { :id => @user.id, :token => @user.token } }
     end
   end
 
