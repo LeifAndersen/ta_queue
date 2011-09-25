@@ -5,6 +5,9 @@ class BoardsController < ApplicationController
   def show
     @current_user = User.where(:id => session['user_id']).first
     if @current_user.nil?
+      if session['user_id']
+        session.delete 'user_id'
+      end
       redirect_to board_login_path
     end
     respond_with do |format|
@@ -19,8 +22,8 @@ class BoardsController < ApplicationController
 
   def logout
     if request.format == "html"
-      user_id = session[:user_id]
-      session.delete :user_id
+      user_id = session['user_id']
+      session.delete 'user_id'
     else
       user_id = params[:id]
     end
