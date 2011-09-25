@@ -7,11 +7,11 @@ namespace :db do
     Board.destroy_all
 
     board = Board.create!(:title => "CS1410", :password => "foobar")
-    board.tas.create!(:username => "Parker")
-    board.tas.create!(:username => "Michael")
-    board.students.create!(:username => "Victor", :location => "lab1-2")
-    board.students.create!(:username => "Sarah", :location => "lab1-3")
-    board.students.create!(:username => "Allison", :location => "lab1-4")
+    board.tas.create!(:username => "Parker", :token => SecureRandom.uuid)
+    board.tas.create!(:username => "Michael", :token => SecureRandom.uuid)
+    board.students.create!(:username => "Victor", :location => "lab1-2", :token => SecureRandom.uuid)
+    board.students.create!(:username => "Sarah", :location => "lab1-3", :token => SecureRandom.uuid)
+    board.students.create!(:username => "Allison", :location => "lab1-4", :token => SecureRandom.uuid)
   end
   
 end
