@@ -8,7 +8,7 @@ class BoardsController < ApplicationController
       if session['user_id']
         session.delete 'user_id'
       end
-      redirect_to board_login_path
+      redirect_to board_login_path(@board) and return
     end
     respond_with do |format|
       format.html { render :show }#render :json => @board.state }
