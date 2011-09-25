@@ -1,11 +1,9 @@
 TaQueue::Application.routes.draw do
   get "pages/index"
 
-  get "pages/login"
-
-  get "pages/logout"
-
   resources :boards do
+    get "login"
+    post "login_user"
     resources :tas
     resources :students
   end

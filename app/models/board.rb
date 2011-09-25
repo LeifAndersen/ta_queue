@@ -6,4 +6,11 @@ class Board
 
   has_many :students
   has_many :tas
+
+  def state
+    hash = Hash.new
+    hash[:tas] = tas.as_jsn
+    hash[:students] = students.as_jsn
+    hash
+  end
 end

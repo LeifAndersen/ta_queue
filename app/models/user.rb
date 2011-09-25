@@ -4,5 +4,13 @@ class User
   field :username, type: String
   field :token, type: String
   field :location, type: String
-  
+
+  def self.as_jsn
+    arr = []
+    all.each do |user|
+      arr << user.output_hash
+    end
+    arr
+  end
+
 end
