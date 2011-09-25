@@ -4,8 +4,8 @@ class Board
   field :title, type: String
   field :password, type: String
 
-  has_many :students
-  has_many :tas
+  has_many :students, dependent: :destroy
+  has_many :tas, dependent: :destroy
 
   def state
     hash = Hash.new

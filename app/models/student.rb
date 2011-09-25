@@ -1,4 +1,4 @@
-class Student < User
+class Student < QueueUser
   belongs_to :board, polymorphic: true
   belongs_to :ta, polymorphic: true
   field :in_queue, type: Boolean

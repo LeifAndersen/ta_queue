@@ -2,8 +2,6 @@ namespace :db do
   desc "Fill daboardbase with sample board"
 
   task :pop => :environment do
-    Ta.destroy_all
-    Student.destroy_all
     Board.destroy_all
 
     board = Board.create!(:title => "CS1410", :password => "foobar")

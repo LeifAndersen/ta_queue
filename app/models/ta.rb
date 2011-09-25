@@ -1,4 +1,4 @@
-class Ta < User
+class Ta < QueueUser
   belongs_to :board, polymorphic: true
   has_one :current_student, class_name:"Student"
 

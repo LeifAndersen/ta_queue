@@ -4,7 +4,7 @@ class BoardsController < ApplicationController
   before_filter :redirect_if_logged_in, :only => [:login, :login_user]
 
   def show
-    @current_user = User.find(session['user_id'])
+    @current_user = QueueUser.where(:_id => session['user_id']).first
     if @current_user.nil?
       if session['user_id']
         session.delete 'user_id'
@@ -28,7 +28,7 @@ class BoardsController < ApplicationController
       user_id = params[:id]
     end
 
-    @user = User.where(:id => user_id).first
+    @user = QueueUser.where(:_id => user_id).first
     respond_with do |f|
       if @user
         @user.destroy
@@ -76,9 +76,10 @@ class BoardsController < ApplicationController
       end
         
     end
+
     def redirect_if_logged_in
       if session["user_id"]
-        if User.find(session["user_id"])
+        if QueueUser.where(:_id => session["user_id"]).first
           redirect_to @board and return
         else
           session.delete "user_id"
