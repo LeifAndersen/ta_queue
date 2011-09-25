@@ -1,4 +1,10 @@
 Login
+- if flash[:errors].present?
+  .errors
+    Errors:
+    %ul
+      - flash[:errors].each do |error|
+        %li= error
 = form_tag board_login_user_path, :method => :post do |f|
   = label_tag :username
   = text_field_tag :username

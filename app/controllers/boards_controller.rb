@@ -3,7 +3,7 @@ class BoardsController < ApplicationController
   before_filter :get_board
 
   def show
-    @current_user = User.where(:id => session['user_id']).first
+    @current_user = User.find(session['user_id'])
     if @current_user.nil?
       if session['user_id']
         session.delete 'user_id'
@@ -41,14 +41,16 @@ class BoardsController < ApplicationController
   def login_user
     # If the person is already logged in, just send them along
     if session["user_id"]
-      if User.find(session["user_id"])
+      if User.where(:id => session["user_id"]).first
         redirect_to @board and return
+      else
+        session.delete "user_id"
       end
     end
 
     if params[:ta_password]
       if params[:ta_password] != @board.password
-        flash[:errors] = "Invalid password for this TA Board"
+        flash[:errors] = ["Invalid password for this TA Board"]
         redirect_to board_login_path and return
       end
       @user = @board.tas.new(:username => params[:username], :token => SecureRandom.uuid)
@@ -66,7 +68,7 @@ class BoardsController < ApplicationController
         f.json { render :json => { :id => @user.id, :token => @user.token } }
       else
         flash[:errors] = @user.errors.full_messages
-        f.html { redirect_to @board }
+        f.html { redirect_to board_login_path(@board) }
         f.json { render head, :status => :unprocessible_entity }
       end
     end
