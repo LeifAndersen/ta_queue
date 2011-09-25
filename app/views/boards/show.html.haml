@@ -6,6 +6,7 @@
   = hidden_field_tag "user_id", @current_user.id.to_s
   %br/
   %ul#ta_list
+  %input{ :type => "button", :value => "Logout" }
   %input{ :type => "button", :value => "Accept Next" }
 #body
   #list
@@ -19,7 +20,8 @@
       Question Board
     #inner_discussion
     #discussion_buttons
-      %input{ :id => "freeze_button", :type => "button", :value => "Freeze" }
+      %input{ :id => "freeze_button", :name => "freeze_button", :type => "button", :value => "Freeze" }
+= link_to "Sign out", board_signout_path
   
   
   
