@@ -1,29 +1,30 @@
 #header
   Logged in as <b>Michael Hogenson</b>
   %br/
-  Currently assigned to <b>Joe @ 3-55</b>
-  %br/
-  %input{ :type => "button", :value => "Accept Next" }
   %ul
     - @board.tas.each do |ta|
       %li
-        = "TA: #{ta.username} currently assigned to"
+        = "#{ta.username} currently assigned to"
         %b some student
+  %input{ :type => "button", :value => "Accept Next" }
 #body
   #list
     #list_header
       TA Queue
-    %ul#inner_list
-      - @board.students.each do |user|
-        %li
-          %span.name= user.username
-          %span.location= user.location
+    #inner_list
+      %ul
+        - @board.students.each do |user|
+          %li
+            %span.name= user.username
+            %span.location= user.location
     #list_buttons
       %input{ :type => "button", :value => "Freeze" }
   #discussion
     #discussion_header
+      Question Board
     #inner_discussion
-    #discussion_buttons 
+    #discussion_buttons
+      %input{ :type => "button", :value => "Freeze" }
   
   
   
