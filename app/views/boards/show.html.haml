@@ -1,5 +1,5 @@
 #header
-  = link_to "Sign out", board_logout_path(@board)
+  = button_to "Sign out", board_logout_path(@board), :method => :get
   Logged in as 
   - if @current_user.ta?
     %b= @current_user.username
