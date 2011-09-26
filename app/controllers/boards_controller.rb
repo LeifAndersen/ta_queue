@@ -1,7 +1,31 @@
 class BoardsController < ApplicationController
   respond_to :xml, :json, :html
-  before_filter :get_board
+  before_filter :get_board, :except => [:new, :create, :index]
   before_filter :filter_users, :only => [:login, :login_user]
+  before_filter :filter_master_password => [:create]
+
+  def create
+    if params[:master_password] == "create_queue"
+      @board = Board.new(params[:board])
+
+      if @board.save
+        redirect_to board_login_path(@board)
+      else
+        render :new
+      end
+    else
+      flash[:error] = "Invalid master password"
+      redirect_to new_board_path
+    end
+  end
+
+  def new
+    @board = Board.new
+  end
+
+  def index
+    @boards = Board.all
+  end
 
   def show
     @current_user = QueueUser.where(:_id => session['user_id']).first
@@ -75,6 +99,10 @@ class BoardsController < ApplicationController
       else
         @board = Board.where(:title => params[:board_id]).first
       end
+
+      if @board.nil?
+        redirect_to root_path
+      end
         
     end
 
@@ -86,6 +114,9 @@ class BoardsController < ApplicationController
           session.delete "user_id"
         end
       end
+    end
+
+    def filter_master_password
     end
 
 end

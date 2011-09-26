@@ -1,0 +1,13 @@
+%style
+  :plain
+    th { padding:10px; border-bottom:3px solid black; }
+    td { text-align:center; }
+= link_to "Create new Queue", new_board_path
+%table
+  %tr
+    %th TA queues
+    %th State
+    %th Students in queue
+    %th Students logged in
+    %th TA's logged in
+  = render @boards

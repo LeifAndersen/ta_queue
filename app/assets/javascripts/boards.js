@@ -16,7 +16,7 @@ function query_queue()
 {
   $.ajax({
     type:"GET",
-    url:"/boards/CS1410",
+    url:"/boards/" + $("#board_title").val(),
     dataType:"json",
     success:queue_cb
     });
