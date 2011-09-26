@@ -10,7 +10,7 @@ class Board
   def state
     hash = Hash.new
     hash[:tas] = tas.as_jsn
-    hash[:students] = students.as_jsn
+    hash[:students] = students.in_queue.as_jsn
     hash
   end
 

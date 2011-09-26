@@ -1,14 +1,45 @@
 $(document).ready(function() {
+  query_queue();
+  $("#enter_queue_button").click( function (){
+    enter_queue();
+  });
+  $("#exit_queue_button").click( function (){
+    exit_queue();
+  });
+  window.setInterval(query_queue, 3000);
+  $('#freeze_button').click( function() {
+    return false;
+  });
+});
+
+function query_queue()
+{
   $.ajax({
     type:"GET",
     url:"/boards/CS1410",
     dataType:"json",
     success:queue_cb
     });
-  $('#freeze_button').click( function() {
-    return false;
-  });
-});
+}
+
+function enter_queue()
+{
+  user_id = $("#user_id").val();
+  user_token = $("#user_token").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/students";
+  $.post(url, { id:user_id, token:user_token, in_queue:true }, query_queue, "json");
+}
+
+function exit_queue()
+{
+  user_id = $("#user_id").val();
+  user_token = $("#user_token").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/students";
+  $.post(url, { id:user_id, token:user_token, in_queue:false }, query_queue, "json");
+
+}
 
 function queue_cb(data)
 {
@@ -19,6 +50,10 @@ function queue_cb(data)
     html += '<li>';
     html += data.students[i].username;
     html += " - " + data.students[i].location;
+    if(data.students[i].in_queue == true)
+      html += " (in queue)";
+    else
+      html += " (not in queue)";
     html += '</li>';
   }
   html += '</ul>';

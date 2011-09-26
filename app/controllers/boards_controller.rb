@@ -1,7 +1,7 @@
 class BoardsController < ApplicationController
   respond_to :xml, :json, :html
   before_filter :get_board
-  before_filter :redirect_if_logged_in, :only => [:login, :login_user]
+  before_filter :filter_users, :only => [:login, :login_user]
 
   def show
     @current_user = QueueUser.where(:_id => session['user_id']).first
@@ -29,6 +29,7 @@ class BoardsController < ApplicationController
     end
 
     @user = QueueUser.where(:_id => user_id).first
+
     respond_with do |f|
       if @user
         @user.destroy
@@ -40,7 +41,7 @@ class BoardsController < ApplicationController
 
   def login_user
 
-    if params[:ta_password]
+    if params[:ta_password].present?
       if params[:ta_password] != @board.password
         flash[:errors] = ["Invalid password for this TA Board"]
         redirect_to board_login_path and return
@@ -77,7 +78,7 @@ class BoardsController < ApplicationController
         
     end
 
-    def redirect_if_logged_in
+    def filter_users
       if session["user_id"]
         if QueueUser.where(:_id => session["user_id"]).first
           redirect_to @board and return

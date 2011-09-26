@@ -5,11 +5,14 @@ class Student < QueueUser
 
   validates :location, :presence => true
 
+  scope :in_queue, where(:in_queue => true)
+
   def output_hash
     hash = {}
     hash[:id] = id
     hash[:username] = username
     hash[:location] = location
+    hash[:in_queue] = in_queue
     hash
   end
 end

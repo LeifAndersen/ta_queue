@@ -3,6 +3,7 @@
   Logged in as 
   - if @current_user.ta?
     %b= @current_user.username
+  = hidden_field_tag "board_title", @board.title
   = hidden_field_tag "user_token", @current_user.token
   = hidden_field_tag "user_id", @current_user.id.to_s
   %br/
@@ -14,7 +15,11 @@
       TA Queue
     #inner_list
     #list_buttons
-      %input{ :type => "button", :value => "Freeze" }
+      - if @current_user.ta?
+        %input{ :type => "button", :value => "Freeze" }
+      - else
+        %input{ :id => "enter_queue_button", :type => "button", :value => "Enter Queue" }
+        %input{ :id => "exit_queue_button", :type => "button", :value => "Exit Queue" }
   #discussion
     #discussion_header
       Question Board
