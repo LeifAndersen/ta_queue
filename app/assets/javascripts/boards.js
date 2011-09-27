@@ -10,6 +10,10 @@ $(document).ready(function() {
   $('#freeze_button').click( function() {
     return false;
   });
+
+  // perform JavaScript after the document is scriptable.
+  // setup ul.tabs to work as tabs for each div directly under div.panes
+  $("ul.tabs").tabs("div.panes > div");
 });
 
 function query_queue()
