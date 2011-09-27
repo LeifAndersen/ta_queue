@@ -6,7 +6,7 @@ class Ta < QueueUser
     hash = {}
     hash[:id] = id
     hash[:username] = username
-    hash[:current_student] = current_student.nil? ? nil : current_student.username;
+    #hash[:current_student] = current_student.nil? ? nil : current_student.username;
     hash
   end
 
