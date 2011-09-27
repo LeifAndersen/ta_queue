@@ -2,6 +2,26 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+/*=============================================================================
+ *
+ *  Code used for login page.
+ *
+ *==========
+ */
+
+label
+{
+	display: inline-block;
+	width: 5em;
+}
+
+/*=============================================================================
+ *
+ *  Various styling used for all pages.  Will break apart later.
+ *
+ *==========
+ */
+
 #content
 {
 	display: inline-block;
@@ -105,9 +125,9 @@
 
 .panes div {
 	display:none;		
-	padding:15px 10px;
+	padding:3em;
 	border:1px solid #999;
 	border-top:0;
-	height:10em;
+	height:8em;
 	background-color:#fff;
 }

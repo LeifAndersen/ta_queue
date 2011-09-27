@@ -2,6 +2,9 @@
   :plain
     th { padding:10px; border-bottom:3px solid black; }
     td { text-align:center; }
+TA Queue List and Status
+%br
+%br
 %table
   %tr
     %th TA queues
@@ -9,6 +12,7 @@
     %th Students in queue
     %th Students logged in
     %th TA's logged in
+    %th Remove
   = render @boards
 %br
 = button_to "New Queue", new_board_path, :method => :get

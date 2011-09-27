@@ -24,9 +24,13 @@
       To log in as a student, simply type in your name and computer location.  Each computer is marked with a label on top of the desktop.  If you are not sitting at a computer, please describe where you are so that the TAs can easily locate you.
     %div
       = label_tag :full_name
-      = text_field_tag :username
+      = text_field_tag :ta_name
       %br
       = label_tag :password
       = text_field_tag :ta_password
+      %p
+      Please log in with your name, and class password provided by the professor you TA for.
   %br
   = submit_tag "Login"
+  %p
+  NOTE: I changed the username fields to student_name and ta_name.  This breaks it, but it should be an easy fix.
