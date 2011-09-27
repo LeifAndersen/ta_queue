@@ -1,5 +1,4 @@
 #header
-  = button_to "Sign out", board_logout_path(@board), :method => :get
   Logged in as 
   - if @current_user.ta?
     %b= @current_user.username
@@ -8,6 +7,7 @@
   = hidden_field_tag "user_id", @current_user.id.to_s
   %br/
   %ul#ta_list
+  = button_to "Sign out", board_logout_path(@board), :method => :get
   %input{ :type => "button", :value => "Accept Next" }
 #body
   #list

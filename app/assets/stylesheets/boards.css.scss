@@ -8,6 +8,9 @@
 	width: 44em;
 	height: auto;
 	border: solid 1px #000;
+	padding: 2em;
+	border-radius: 15px;
+	background-color: #d6e4e1
 }
 
 #header
@@ -80,4 +83,10 @@
 	padding: 0.5em;
 	text-align: right;
 	width: 20em;
+}
+
+.shadow 
+{
+	-oz-box-shadow: 0 0 30px 5px #8c9c9a;
+	-webkit-box-shadow: 0 0 30px 5px #8c9c9a;
 }

@@ -10,7 +10,7 @@ TaQueue::Application.routes.draw do
     resources :students
   end
 
-  root :to => "boards#new"
+  root :to => "boards#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

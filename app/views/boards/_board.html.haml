@@ -1,5 +1,5 @@
 %tr
-  %td= board.title
+  %td= link_to board.title, board_login_path(board)
   %td= board.tas.count > 0 ? "Active" : "Inactive"
   %td= board.students.in_queue.count
   %td= board.students.count
