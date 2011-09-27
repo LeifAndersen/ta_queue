@@ -2,7 +2,7 @@
       QUEUE API
 ======================
 
-POST /classes/:class_name/login
+POST /boards/:board_title/login_user
   Parameters: (JSON/XML)
     {
       name:"some_name"
@@ -21,7 +21,29 @@ POST /classes/:class_name/login
       password: "You supplied an invalid password"
     }
 
-GET /classes/:class_name
+POST /boards/:board_title
+  Parameters: (JSON/XML)
+    {
+			id:"some_id",
+			token:"some_token",         
+
+			// Optional
+
+			board[frozen]:true/false    // Must be TA
+			board[active]:true/false    // Must be TA
+    }
+  Response: (JSON/XML)
+    Success code: 200
+    {
+			// Same response as GET /boards/:board_title
+    }
+
+    Failure code: 401 // If, for example, you supply to wrong ta password
+    {
+      password: "You supplied an invalid password"
+    }
+
+GET /boards/:board_title
   Format: HTML - Shows the queue for the user (uses session variable to find who it is)
   Response: (JSON/XML)
     Success code: 200
@@ -31,13 +53,13 @@ GET /classes/:class_name
         student: 
         { 
           id:some_id_1,
-          name:"user1", 
+          username:"user1", 
           location:"location1" 
         },
         student: 
         { 
           id:some_id_2,
-          name:"user2", 
+          username:"user2", 
           location:"location2" 
         }
       ]
@@ -46,16 +68,16 @@ GET /classes/:class_name
         ta:
         {
           id:some_ta_id_1,
-          name:"ta1",
+          username:"ta1",
           location:"ta_location_1",
-          currently_helping:some_student_id
+          current_student:some_student_id
         },
         ta:
         {
           id:some_ta_id_2,
-          name:"ta2",
+          username:"ta2",
           location:"ta_location_2",
-          currently_helping:some_student_id
+          current_student:some_student_id
         }
       ]
     }
@@ -64,13 +86,13 @@ GET /classes/:class_name
         TA API
 =========================
 	
-POST /classes/:class_name/tas/:ta_id
+POST /classes/:class_name/tas
   Parameters:
     {
+			id:"some_id"
       ta_token:"some_token",
 
       // Below are optional parameters
-
       accept_student:"student_id",
       logout:true                 // Passing false here will result in a nop
     }
@@ -87,11 +109,10 @@ GET /classes/:class_name/tas/:ta_id
       user:
       { 
         id:some_id_2,
-        name:"user2", 
+        username:"user2", 
         location:"location2" 
       }
     }
-
     Failure code: 403 (Forbidden)
     { }
 
@@ -106,8 +127,8 @@ POST /classes/:class_name/students/:student_id
 
     // Below are optional parameters
 
-    in_queue:true/false,   // true puts the student in the queue, false removes them
-    logout:true           // Passing false here results in a nop
+    tutor[in_queue]:true/false,   // true puts the student in the queue, false removes them
+    logout:true                   // Passing false here results in a nop
   }
   Response: (JSON/XML)
     Success code: 200 (Success)
@@ -122,7 +143,7 @@ GET /classes/:class_name/students/:student_id
       user:
       { 
         id:some_id_2,
-        name:"user2", 
+        username:"user2", 
         location:"location2" 
       }
     }

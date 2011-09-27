@@ -1,12 +1,15 @@
 class BoardsController < ApplicationController
   respond_to :xml, :json, :html
   before_filter :get_board, :except => [:new, :create, :index]
+  before_filter :authorize_ta!, :only => [:update]
   before_filter :filter_users, :only => [:login, :login_user]
   before_filter :filter_master_password => [:create]
 
   def create
     if params[:master_password] == "create_queue"
       @board = Board.new(params[:board])
+      @board.frozen = false
+      @board.active = false
 
       if @board.save
         redirect_to board_login_path(@board)
@@ -16,6 +19,22 @@ class BoardsController < ApplicationController
     else
       flash[:error] = "Invalid master password"
       redirect_to new_board_path
+    end
+  end
+
+  def update
+    @board.update_attributes(params[:board])
+
+    respond_with do |f|
+      if @board.save
+        f.html { redirect_to board_login_path(@board) }
+        f.json { render :json => @board.state }
+        f.xml  { render :json => @board.state }
+      else
+        f.html { render :edit }
+        f.json { render :json => @board.errors, :status => :unprocessable_entity }
+        f.xml  { render :json => @board.errors, :status => :unprocessable_entity }
+      end
     end
   end
 

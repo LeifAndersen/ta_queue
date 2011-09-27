@@ -20,25 +20,21 @@
   = submit_tag "Login"
 
 <!-- the tabs -->
-<ul class="tabs">
-	<li><a href="#">Student</a></li>
-	<li><a href="#">TA</a></li>
-</ul>
+%ul.tabs
+  %li= link_to "Student", "#"
+  %li= link_to "TA", "#"
 
 <!-- tab "panes" -->
-<div class="panes">
-  <div>
+.panes
+  %div
     = label_tag :username
     = text_field_tag :username
     %br
     = label_tag :ta_password
     = text_field_tag :ta_password
-  </div>
-  <div>
+  %div
     = label_tag :username
     = text_field_tag :username
     %br
     = label_tag :location
     = text_field_tag :location
-  </div>
-</div>

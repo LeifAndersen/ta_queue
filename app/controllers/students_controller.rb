@@ -4,6 +4,7 @@ class StudentsController < ApplicationController
   before_filter :authorize_student!, :only => [:create]
 
   respond_to :json, :xml
+
   def show
     respond_with do |f|
       f.json{ render :json => @student.output_hash }
@@ -16,7 +17,6 @@ class StudentsController < ApplicationController
     if params[:logout] && params[:logout] == true
       @student.destroy
       respond_with do |f|
-        f.html { redirect_to board_login_path(@board) }
         f.json { head :success }
         f.xml  { head :success }
       end
@@ -49,7 +49,6 @@ class StudentsController < ApplicationController
       valid = false if params[:token].nil? || @student.token != params[:token]
       if !valid
         respond_with do |f| 
-          f.html { redirect_to root_path }
           f.json { head :forbidden }
           f.xml  { head :forbidden }
         end
@@ -61,7 +60,6 @@ class StudentsController < ApplicationController
       @board ||= Board.where(:title => params[:board_id]).first
       if !@board
         respond_with do |f|
-          f.html { redirect_to root_path }
           f.json { head :bad_request }
           f.xml  { head :bad_request }
         end
@@ -73,7 +71,6 @@ class StudentsController < ApplicationController
       @student ||= @board.students.where(:_id => params[:id]).first
       if !@student
         respond_with do |f|
-          f.html { redirect_to root_path }
           f.json { head :bad_request }
           f.xml { head :bad_request }
         end

@@ -3,6 +3,8 @@ class Board
 
   field :title, type: String
   field :password, type: String
+  field :frozen, type: Boolean
+  field :active, type: Boolean
 
   has_many :students, dependent: :destroy
   has_many :tas, dependent: :destroy
