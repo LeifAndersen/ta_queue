@@ -14,6 +14,7 @@ $(document).ready(function() {
   // perform JavaScript after the document is scriptable.
   // setup ul.tabs to work as tabs for each div directly under div.panes
   $("ul.tabs").tabs("div.panes > div");
+  $("ul.tabs").center();
 });
 
 function query_queue()
