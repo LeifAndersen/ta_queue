@@ -7,34 +7,26 @@
     %ul
       - flash[:errors].each do |error|
         %li= error
-= form_tag board_login_user_path, :method => :post do |f|
-  = label_tag :username
-  = text_field_tag :username
-  %br
-  = label_tag :ta_password
-  = text_field_tag :ta_password
-  %br
-  = label_tag :location
-  = text_field_tag :location
-  %br
-  = submit_tag "Login"
 
 <!-- the tabs -->
-%ul.tabs
-  %li= link_to "Student", "#"
-  %li= link_to "TA", "#"
+= form_tag board_login_user_path, :method => :post do |f|
+  %ul.tabs
+    %li= link_to "Student", "#"
+    %li= link_to "TA", "#"
 
 <!-- tab "panes" -->
-.panes
-  %div
-    = label_tag :username
-    = text_field_tag :username
-    %br
-    = label_tag :ta_password
-    = text_field_tag :ta_password
-  %div
-    = label_tag :username
-    = text_field_tag :username
-    %br
-    = label_tag :location
-    = text_field_tag :location
+  .panes
+    %div
+      = label_tag :username
+      = text_field_tag :username
+      %br
+      = label_tag :ta_password
+      = text_field_tag :ta_password
+    %div
+      = label_tag :username
+      = text_field_tag :username
+      %br
+      = label_tag :location
+      = text_field_tag :location
+  %br
+  = submit_tag "Login"
