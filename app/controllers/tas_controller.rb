@@ -23,9 +23,7 @@ class TasController < ApplicationController
       return
     end
 
-    if params[:location]
-      @ta.location = params[:location]
-    end
+    @ta.current_student = Student.where(params[:ta][:current_student]).first if params[:ta][:current_student]
 
     respond_with do |f|
       if @ta.save

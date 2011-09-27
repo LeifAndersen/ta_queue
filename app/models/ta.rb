@@ -1,6 +1,6 @@
 class Ta < QueueUser
-  belongs_to :board, polymorphic: true
-  has_one :current_student, class_name:"Student"
+  belongs_to :board
+  has_one :student, as: :queue_student
 
   def output_hash
     hash = {}

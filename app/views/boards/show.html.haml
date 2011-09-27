@@ -1,14 +1,15 @@
 #header
   Logged in as 
-  - if @current_user.ta?
-    %b= @current_user.username
-  = hidden_field_tag "board_title", @board.title
-  = hidden_field_tag "user_token", @current_user.token
-  = hidden_field_tag "user_id", @current_user.id.to_s
+  %b= @current_user.username
+  = form_tag "/" do |f|
+    = hidden_field_tag "board_title", @board.title
+    = hidden_field_tag "user_token", @current_user.token
+    = hidden_field_tag "user_id", @current_user.id.to_s
   %br/
   %ul#ta_list
   = button_to "Sign out", board_logout_path(@board), :method => :get
-  %input{ :type => "button", :value => "Accept Next" }
+  - if @current_user.ta?
+    %input{ :type => "button", :value => "Accept Next" }
 #body
   #list
     #list_header

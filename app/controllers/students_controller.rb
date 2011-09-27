@@ -23,13 +23,20 @@ class StudentsController < ApplicationController
       return
     end
 
-    if params[:in_queue]
-      @student.in_queue = params[:in_queue]
+    # This one attribute is abstracted as true/false to clients but is actually a date
+    # to help with sorting
+    if params[:student][:in_queue]
+      if params[:student][:in_queue] == "true"
+        @student.in_queue = DateTime.now 
+      elsif params[:student][:in_queue] == "false"
+        @student.in_queue = nil 
+        #@student.ta.current_student = nil if @student.ta
+        logger.debug "EXECUTED TA NIL"
+      end
+      params[:student].delete :in_queue
     end
 
-    if params[:location]
-      @student.location = params[:location]
-    end
+    @student.update_attributes(params[:student])
 
     respond_with do |f|
       if @student.save

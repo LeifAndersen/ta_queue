@@ -12,8 +12,9 @@ POST /boards/:board_title/login_user
   Response: (JSON/XML)
     Success code: 200
     {
-      id:some_id // This should be kept around for use in all other request
-      token:some_token // Students only have access to the the stupent API, and TA's have access to both
+      id:some_id       // This should be kept around for use in all other request
+      token:some_token // Students only have access to the the stupent API, and TA's 
+                       have access to most everything
     }
 
     Failure code: 401 // If, for example, you supply to wrong ta password
@@ -24,18 +25,18 @@ POST /boards/:board_title/login_user
 POST /boards/:board_title
   Parameters: (JSON/XML)
     {
-			id:"some_id",
-			token:"some_token",         
+      id:"some_id",
+      token:"some_token",         
 
-			// Optional
+      // Optional
 
-			board[frozen]:true/false    // Must be TA
-			board[active]:true/false    // Must be TA
+      board[frozen]:true/false    // Must be TA
+      board[active]:true/false    // Must be TA
     }
   Response: (JSON/XML)
     Success code: 200
     {
-			// Same response as GET /boards/:board_title
+       // Same response as GET /boards/:board_title
     }
 
     Failure code: 401 // If, for example, you supply to wrong ta password

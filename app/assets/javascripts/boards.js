@@ -1,5 +1,8 @@
 $(document).ready(function() {
   query_queue();
+  $.ajaxSetup({
+    headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+  });
   $("#enter_queue_button").click( function (){
     enter_queue();
   });
@@ -33,7 +36,13 @@ function enter_queue()
   user_token = $("#user_token").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/students";
-  $.post(url, { id:user_id, token:user_token, in_queue:true }, query_queue, "json");
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { id:user_id, token:user_token, "student[in_queue]":true },
+    dataType:"json",
+    success:query_queue,
+    });
 }
 
 function exit_queue()
@@ -42,8 +51,13 @@ function exit_queue()
   user_token = $("#user_token").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/students";
-  $.post(url, { id:user_id, token:user_token, in_queue:false }, query_queue, "json");
-
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { id:user_id, token:user_token, "student[in_queue]":false },
+    dataType:"json",
+    success:query_queue,
+    });
 }
 
 function queue_cb(data)

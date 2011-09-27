@@ -89,9 +89,9 @@ class BoardsController < ApplicationController
         flash[:errors] = ["Invalid password for this TA Board"]
         redirect_to board_login_path and return
       end
-      @user = @board.tas.new(:username => params[:username], :token => SecureRandom.uuid)
+      @user = @board.tas.new(:username => params[:ta_name], :token => SecureRandom.uuid)
     else
-      @user = @board.students.new(:username => params[:username], :location => params[:location], :token => SecureRandom.uuid)
+      @user = @board.students.new(:username => params[:student_name], :location => params[:location], :token => SecureRandom.uuid)
     end
 
     if request.format == "html"
