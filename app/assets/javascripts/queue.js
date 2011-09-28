@@ -1,12 +1,11 @@
 /*=============================================================================
  *
- *  Everything related to quering the Queue portion of the database should go 
- *  here including Ajax callback methods.
+ *  queue.js
+ *
+ *  Everything related to queue portion of the database should go here.
  *
  *==========
  */
-
-//Sets the interval for the browser to requery the database.
 
 function queue_setup()
 {
