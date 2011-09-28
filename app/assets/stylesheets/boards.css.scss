@@ -11,7 +11,8 @@
 
 body
 {
-  font-family:"Helvetica"
+  font-family:"Helvetica";
+  font-size:0.9em;
 }
 
 /*=============================================================================
@@ -132,9 +133,10 @@ label
 
 table.board_status_table
 {
+  font-size:0.8em;
   th 
   { 
-    padding:5px; border-bottom:3px solid black; 
+    padding:0.5em; border-bottom:3px solid black; 
   }
   td 
   { 
