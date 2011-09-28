@@ -6,7 +6,7 @@ class Board
   field :frozen, type: Boolean
   field :active, type: Boolean
 
-  has_many :students, as: :queue_student, dependent: :destroy
+  has_many :students, dependent: :destroy
   has_many :tas, dependent: :destroy
 
   validates :title, :uniqueness => true

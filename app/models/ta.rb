@@ -1,6 +1,7 @@
 class Ta < QueueUser
   belongs_to :board
-  has_one :student, as: :queue_student
+
+  has_one :student, :class_name => "Student"
 
   def output_hash
     hash = {}

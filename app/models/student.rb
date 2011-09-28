@@ -1,5 +1,7 @@
 class Student < QueueUser
-  belongs_to :queue_student, polymorphic: true
+  belongs_to :board
+  belongs_to :ta, :class_name => "Ta"
+
   field :in_queue, type: DateTime
 
   validates :location, :presence => true
