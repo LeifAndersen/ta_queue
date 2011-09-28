@@ -1,3 +1,8 @@
+/*
+ * NOTE: Web browsers can "fake" PUT and DELETE requests to the server
+ *       by sending _method:"PUT" or _method:"DELETE" in the parameters of
+ *       a POST request
+ */
 ======================
       QUEUE API
 ======================
@@ -22,15 +27,14 @@ POST /boards/:board_title/login_user
       password: "You supplied an invalid password"
     }
 
-POST /boards/:board_title
+PUT /boards/:board_title
   Parameters: (JSON/XML)
     {
-      id:"some_id",
-      token:"some_token",         
+      token:"some_token",
 
       // Optional
 
-      board[frozen]:true/false    // Must be TA
+      board[frozen]:true/false,    // Must be TA
       board[active]:true/false    // Must be TA
     }
   Response: (JSON/XML)
@@ -49,6 +53,8 @@ GET /boards/:board_title
   Response: (JSON/XML)
     Success code: 200
     {
+			active:true/false,
+			frozen:true/false,
       students: 
       [ 
         student: 
@@ -87,10 +93,9 @@ GET /boards/:board_title
         TA API
 =========================
 	
-POST /classes/:class_name/tas
+PUT /boards/:board_title/tas/:ta_id
   Parameters:
     {
-			id:"some_id"
       ta_token:"some_token",
 
       // Below are optional parameters
@@ -103,7 +108,7 @@ POST /classes/:class_name/tas
     Failure code: 403 (Forbidden)
     { }
 
-GET /classes/:class_name/tas/:ta_id
+GET /boards/:board_title/tas/:ta_id
   Response: (JSON/XML)
     Success code: 200 (Success)
     {
@@ -121,7 +126,7 @@ GET /classes/:class_name/tas/:ta_id
       STUDENT API
 =========================
 
-POST /classes/:class_name/students/:student_id
+PUT /boards/:board_title/students/:student_id
   Parameters:
   {
     token:"some_token"
@@ -137,7 +142,7 @@ POST /classes/:class_name/students/:student_id
     Failure code: 403 (Forbidden)
     { }
 	
-GET /classes/:class_name/students/:student_id
+GET /boards/:board_title/students/:student_id
   Response: (JSON/XML)
     Success code: 200 (Success)
     {

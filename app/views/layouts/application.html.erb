@@ -3,7 +3,9 @@
 <head>
   <title>TaQueue</title>
   <%= stylesheet_link_tag    "application" %>
+  <%= yield :stylesheets %>
   <%= javascript_include_tag "application" %>
+  <%= yield :javascripts %>
   <%= csrf_meta_tags %>
 </head>
 <body>

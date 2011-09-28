@@ -21,6 +21,9 @@ function queue_setup()
 	$('#freeze_button').click(function() {
 		return false;
 	});
+  
+  // Do an initial query before the 3 second one
+  query_queue();
 }
 
 function set_interval(milliseconds)
@@ -76,11 +79,12 @@ function enter_queue()
   user_id = $("#user_id").val();
   user_token = $("#user_token").val();
   board_title = $("#board_title").val();
-  url = "/boards/" + board_title + "/students";
+  url = "/boards/" + board_title + "/students/" + user_id;
+  // NOTE: You must use _method:"PUT" when updating records
   $.ajax({
     type:"POST",
     url:url,
-    data: { id:user_id, token:user_token, "student[in_queue]":true },
+    data: { _method:"PUT", token:user_token, "student[in_queue]":true },
     dataType:"json",
     success:query_queue,
     });
@@ -91,11 +95,11 @@ function exit_queue()
   user_id = $("#user_id").val();
   user_token = $("#user_token").val();
   board_title = $("#board_title").val();
-  url = "/boards/" + board_title + "/students";
+  url = "/boards/" + board_title + "/students/" + user_id;
   $.ajax({
     type:"POST",
     url:url,
-    data: { id:user_id, token:user_token, "student[in_queue]":false },
+    data: { _method:"PUT", token:user_token, "student[in_queue]":false },
     dataType:"json",
     success:query_queue,
     });
