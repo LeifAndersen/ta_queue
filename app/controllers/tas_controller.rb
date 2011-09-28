@@ -14,6 +14,9 @@ class TasController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
+  end
+
+  def update
     if params[:logout]
       @ta.destroy
       respond_with do |f|
@@ -34,7 +37,6 @@ class TasController < ApplicationController
         f.xml  { render :json => @ta.errors, :status => :unprocessable_entity }
       end
     end
-
   end
 
   private

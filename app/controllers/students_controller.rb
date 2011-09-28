@@ -14,6 +14,10 @@ class StudentsController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
+
+  end
+
+  def update
     if params[:logout] && params[:logout] == true
       @student.destroy
       respond_with do |f|
