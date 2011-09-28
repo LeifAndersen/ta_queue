@@ -83,7 +83,6 @@ class BoardsController < ApplicationController
   end
 
   def login_user
-
     if params[:ta_password].present?
       if params[:ta_password] != @board.password
         flash[:errors] = ["Invalid password for this TA Board"]

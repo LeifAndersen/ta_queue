@@ -4,6 +4,7 @@ class StudentsController < ApplicationController
   before_filter :authorize_student!, :only => [:create]
 
   respond_to :json, :xml
+  respond_to :html, :only => [:create, :update]
 
   def show
     respond_with do |f|
@@ -14,6 +15,9 @@ class StudentsController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
+    @ta = Ta.new(params[:student])
+
+    respond_with
 
   end
 
