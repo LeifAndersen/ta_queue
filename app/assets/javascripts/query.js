@@ -1,3 +1,29 @@
+/*=============================================================================
+ *
+ *  Everything related to quering the Queue portion of the database should go 
+ *  here including Ajax callback methods.
+ *
+ *==========
+ */
+
+//Sets the interval for the browser to requery the database.
+
+function queue_setup()
+{
+	$("#enter_queue_button").click(function ()
+	{
+    	enter_queue();
+  	});
+  
+	$("#exit_queue_button").click(function (){
+		exit_queue();
+	});
+
+	$('#freeze_button').click(function() {
+		return false;
+	});
+}
+
 function set_interval(milliseconds)
 {
 	window.setInterval(query_queue, milliseconds);
@@ -52,4 +78,34 @@ function queue_cb(data)
 
 	$('ul#ta_list').html(html);
 	return false;
+}
+
+function enter_queue()
+{
+  user_id = $("#user_id").val();
+  user_token = $("#user_token").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/students";
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { id:user_id, token:user_token, "student[in_queue]":true },
+    dataType:"json",
+    success:query_queue,
+    });
+}
+
+function exit_queue()
+{
+  user_id = $("#user_id").val();
+  user_token = $("#user_token").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/students";
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { id:user_id, token:user_token, "student[in_queue]":false },
+    dataType:"json",
+    success:query_queue,
+    });
 }
