@@ -1,5 +1,16 @@
+:plain
 = content_for :javascripts do javascript_include_tag "jquery.tools.min", "login" end
 = "Login to " + @board.title
+.float_right
+  %table.board_status_table
+    %tr
+      %th Status
+      %th Students in queue
+      %th TA's logged in
+    %tr
+      %td= @board.active ? "Active" : "Inactive"
+      %td= @board.students.in_queue.count
+      %td= @board.tas.count
 %br
 %br
 - if flash[:errors].present?

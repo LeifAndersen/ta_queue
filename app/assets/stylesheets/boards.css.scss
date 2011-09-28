@@ -128,6 +128,20 @@ label
 	-webkit-box-shadow: 0 0 30px 5px #455372; */
 }
 
+.float_right { float:right; }
+
+table.board_status_table
+{
+  th 
+  { 
+    padding:5px; border-bottom:3px solid black; 
+  }
+  td 
+  { 
+    text-align:center; 
+  }
+}
+
 /*=============================================================================
  *
  *  Code used for tab pane styling
