@@ -38,6 +38,7 @@ function query_queue()
 	});
 }
 
+// This method is responsible for updating queue data.
 function queue_cb(data)
 {
 	html = "";
@@ -46,15 +47,6 @@ function queue_cb(data)
 	{
 		html += '<li>';
 		html += data.students[i].username;
-		html += " - " + data.students[i].location;
-		if(data.students[i].in_queue == true)
-		{
-			html += " (in queue)";
-		}
-    	else
-    	{
-      		html += " (not in queue)";
-      	}
 		html += '</li>';
 	}
 	html += '</ul>';
