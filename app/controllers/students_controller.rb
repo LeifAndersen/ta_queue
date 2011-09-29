@@ -15,7 +15,7 @@ class StudentsController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
-    @student = Student.new(params[:student].merge( { token: SecureRandom.uuid } ))
+    @student = @board.students.new(params[:student].merge( { token: SecureRandom.uuid } ))
     respond_with do |f|
       if @student.save
         session['user_id'] = @student.id if request.format == 'html'
@@ -34,32 +34,40 @@ class StudentsController < ApplicationController
   def update
     # This one attribute is abstracted as true/false to clients but is actually a date
     # to help with sorting
+    logger.debug "GOT HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     if params[:student][:in_queue]
       if params[:student][:in_queue] == "true"
         @student.in_queue = DateTime.now 
       elsif params[:student][:in_queue] == "false"
         @student.in_queue = nil 
-        #@student.ta.current_student = nil if @student.ta
         logger.debug "EXECUTED TA NIL"
       end
       params[:student].delete :in_queue
     end
 
     @student.update_attributes(params[:student])
+    @student.save
 
     respond_with @student
   end
 
+  def destroy
+    @student.destroy
+    respond_with do |f|
+      f.html { redirect_to board_login_path @board }
+    end
+  end
+
   private
     def authorize_student!
-      valid = true
-      valid = false if params[:token].nil? || @student.token != params[:token]
-      if !valid
-        respond_with do |f| 
-          f.json { head :forbidden }
-          f.xml  { head :forbidden }
+      if session['user_id'] != @student.id
+        if params[:token].nil? || @student.token != params[:token]
+          respond_with do |f| 
+            f.json { head :forbidden }
+            f.xml  { head :forbidden }
+          end
+          return
         end
-        return
       end
     end
 

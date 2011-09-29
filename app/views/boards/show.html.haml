@@ -8,7 +8,10 @@
     = hidden_field_tag "user_id", @current_user.id.to_s
   %br/
   %ul#ta_list
-  = button_to "Sign out", board_logout_path(@board), :method => :get
+  - if @current_user.student?
+    = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete
+  - else
+    = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
   - if @current_user.ta?
     %input{ :type => "button", :value => "Accept Next" }
 #body

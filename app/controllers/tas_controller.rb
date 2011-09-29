@@ -6,14 +6,25 @@ class TasController < ApplicationController
   respond_to :json, :xml
 
   def show
-    respond_with do |f|
-      f.json{ render :json => @ta.output_hash }
-      f.xml { render :xml => @ta.output_hash }
-    end
+    respond_with @ta
   end
 
-  # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
+    @ta = @board.tas.new(params[:ta].merge( { token: SecureRandom.uuid } ) )
+
+    respond_with do |f|
+      if @ta.save
+        session['user_id'] = @ta.id if request.format == 'html'
+        f.html { redirect_to (board_path @board) }
+        f.json { render :json => { token: @ta.token, id: @ta.id, username: @ta.username } }
+        f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username } }
+      else
+        raise @student.errors.inspect
+        f.html { redirect_to board_login_path @board }
+        f.json { render :json => @ta.errors, :status => :unprocessable_entity }
+        f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username } }
+      end
+    end
   end
 
   def update
