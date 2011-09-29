@@ -21,9 +21,8 @@ function queue_setup()
 	
 	$("#accept_next_button").click(function()
 	{
-		test = $("#queue").first();
-		alert(test);
-		
+		var next_person = $("#queue li").first().find(".student_token").val();
+		alert(next_person);
 	});
 
 	$('#freeze_button').click(function() 
@@ -59,6 +58,7 @@ function queue_cb(data)
 	{
 		html += '<li>';
 		html += data.students[i].username;
+		html += '<input type="hidden" class="student_token" name="student_' + i + '" value="' + data.students[i].id + '" />';
 		html += '</li>';
 	}
 	html += '</ul>';
