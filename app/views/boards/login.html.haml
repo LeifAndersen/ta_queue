@@ -35,7 +35,7 @@
     %p
       To log in as a student, simply type in your name and computer location.  Each computer is marked with a label on top of the desktop.  If you are not sitting at a computer, please describe where you are so that the TAs can easily locate you.
   .panel
-    = form_for [@board, @student] do |f|
+    = form_for [@board, @ta] do |f|
       = f.label :username
       = f.text_field :username
       %br

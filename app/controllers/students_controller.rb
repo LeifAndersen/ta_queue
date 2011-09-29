@@ -23,7 +23,6 @@ class StudentsController < ApplicationController
         f.json { render :json => { token: @student.token, id: @student.id, username: @student.username } }
         f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username } }
       else
-        raise @student.errors.inspect
         f.html { redirect_to board_login_path @board }
         f.json { render :json => @student.errors, :status => :unprocessable_entity }
         f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username } }
