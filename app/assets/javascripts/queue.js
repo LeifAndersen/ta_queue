@@ -14,11 +14,20 @@ function queue_setup()
     	enter_queue();
   	});
   
-	$("#exit_queue_button").click(function (){
+	$("#exit_queue_button").click(function ()
+	{
 		exit_queue();
 	});
+	
+	$("#accept_next_button").click(function()
+	{
+		test = $("#queue").first();
+		alert(test);
+		
+	});
 
-	$('#freeze_button').click(function() {
+	$('#freeze_button').click(function() 
+	{
 		return false;
 	});
   
@@ -45,7 +54,7 @@ function query_queue()
 function queue_cb(data)
 {
 	html = "";
-	html += '<ul>';
+	html += '<ul id="queue">';
 	for(i = 0; i < data.students.length; i++)
 	{
 		html += '<li>';

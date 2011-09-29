@@ -2,11 +2,10 @@
 #header
   Logged in as 
   %b= @current_user.username
-  = form_tag "/" do |f|
-    = hidden_field_tag "board_title", @board.title
-    = hidden_field_tag "user_token", @current_user.token
-    = hidden_field_tag "user_id", @current_user.id.to_s
-    = hidden_field_tag "is_ta", @current_user.ta?
+  = hidden_field_tag "board_title", @board.title
+  = hidden_field_tag "user_token", @current_user.token
+  = hidden_field_tag "user_id", @current_user.id.to_s
+  = hidden_field_tag "is_ta", @current_user.ta?
   %br/
   %ul#ta_list
   - if @current_user.student?
@@ -14,7 +13,7 @@
   - else
     = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
   - if @current_user.ta?
-    %input{ :type => "button", :value => "Accept Next" }
+    %input{ :id => "accept_next_button", :type => "button", :value => "Accept Next" }
 #body
   #list
     #list_header
