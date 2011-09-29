@@ -6,6 +6,7 @@
     = hidden_field_tag "board_title", @board.title
     = hidden_field_tag "user_token", @current_user.token
     = hidden_field_tag "user_id", @current_user.id.to_s
+    = hidden_field_tag "is_ta", @current_user.ta?
   %br/
   %ul#ta_list
   - if @current_user.student?

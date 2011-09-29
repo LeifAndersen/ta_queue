@@ -23,7 +23,7 @@
   %li= link_to "Student", "#"
   %li= link_to "TA", "#"
 .panes
-  %div
+  .panel
     = form_for [@board, @student] do |f|
       = f.label :username
       = f.text_field :username
@@ -34,7 +34,7 @@
       = submit_tag "Login"
     %p
       To log in as a student, simply type in your name and computer location.  Each computer is marked with a label on top of the desktop.  If you are not sitting at a computer, please describe where you are so that the TAs can easily locate you.
-  %div
+  .panel
     = form_for [@board, @student] do |f|
       = f.label :username
       = f.text_field :username
