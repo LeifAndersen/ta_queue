@@ -8,12 +8,10 @@ class QueueUser
   validates :username, :token, :presence => true
   validates :username, :uniqueness => true
 
-  def self.as_jsn
-    arr = []
-    all.each do |user|
-      arr << user.output_hash
-    end
-    arr
+  before_create :create_token
+
+  def as_json options = {}
+    output_hash
   end
 
   def ta?
@@ -23,4 +21,10 @@ class QueueUser
   def student?
     self.class == Student
   end
+
+  private
+    
+    def create_token
+      token = SecureRandom.uuid
+    end
 end

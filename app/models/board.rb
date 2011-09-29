@@ -16,9 +16,17 @@ class Board
     hash = Hash.new
     hash[:active] = active
     hash[:frozen] = frozen
-    hash[:tas] = tas.as_jsn
-    hash[:students] = students.in_queue.as_jsn
+    hash[:tas] = tas.as_json
+    hash[:students] = students.in_queue.as_json
     hash
+  end
+
+  def as_json options = {}
+    state
+  end
+
+  def to_xml options = {}
+    state.to_xml
   end
 
   def to_param

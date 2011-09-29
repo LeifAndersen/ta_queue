@@ -19,28 +19,31 @@
       - flash[:errors].each do |error|
         %li= error
 
-<!-- the tabs -->
-= form_tag board_login_user_path, :method => :post do |f|
-  %ul.tabs
-    %li= link_to "Student", "#"
-    %li= link_to "TA", "#"
-  .panes
-    %div
-      = label_tag :full_name
-      = text_field_tag :student_name
+%ul.tabs
+  %li= link_to "Student", "#"
+  %li= link_to "TA", "#"
+.panes
+  %div
+    = form_for [@board, @student] do |f|
+      = f.label :username
+      = f.text_field :username
       %br
-      = label_tag :location
-      = text_field_tag :location
-      %p
+      = f.label :location
+      = f.text_field :location
+      %br
+      = submit_tag "Login"
+    %p
       To log in as a student, simply type in your name and computer location.  Each computer is marked with a label on top of the desktop.  If you are not sitting at a computer, please describe where you are so that the TAs can easily locate you.
-    %div
-      = label_tag :full_name
-      = text_field_tag :ta_name
+  %div
+    = form_for [@board, @student] do |f|
+      = f.label :username
+      = f.text_field :username
       %br
-      = label_tag :password
+      = f.label :password
       = text_field_tag :ta_password
-      %p
+      %br
+      = submit_tag "Login"
+    %p
       Please log in with your name, and class password provided by the professor you TA for.
-  %br
-  = submit_tag "Login"
-  %p
+%br
+%p

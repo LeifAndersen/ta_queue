@@ -3,7 +3,7 @@ class BoardsController < ApplicationController
   before_filter :get_board, :except => [:new, :create, :index]
   before_filter :authorize_ta!, :only => [:update]
   before_filter :filter_users, :only => [:login, :login_user]
-  before_filter :filter_master_password => [:create]
+  before_filter :filter_master_password, :only => [:create]
 
   def create
     if params[:master_password] == "create_queue"
@@ -54,13 +54,12 @@ class BoardsController < ApplicationController
       end
       redirect_to board_login_path(@board) and return
     end
-    respond_with do |format|
-      format.html { render :show }#render :json => @board.state }
-      format.json { render :json => @board.state }
-    end
+    respond_with @board, :include => [:tas, :students]
   end
 
   def login
+    @student = Student.new
+    @ta = Ta.new
   end
 
   def logout

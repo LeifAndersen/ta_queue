@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
   before_filter :get_board
-  before_filter :get_student
-  before_filter :authorize_student!, :only => [:create]
+  before_filter :get_student, :except => [:index, :new, :create]
+  before_filter :authorize_student!, :except => [:create]
 
   respond_to :json, :xml
   respond_to :html, :only => [:create, :update]
@@ -15,22 +15,22 @@ class StudentsController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
-    @ta = Ta.new(params[:student])
-
-    respond_with
-
+    @student = Student.new(params[:student].merge( { token: SecureRandom.uuid } ))
+    respond_with do |f|
+      if @student.save
+        f.html { redirect_to (board_path @board) }
+        f.json { render :json => { token: @student.token, id: @student.id, username: @student.username } }
+        f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username } }
+      else
+        raise @student.errors.inspect
+        f.html { redirect_to board_login_path @board }
+        f.json { render :json => @student.errors, :status => :unprocessable_entity }
+        f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username } }
+      end
+    end
   end
 
   def update
-    if params[:logout] && params[:logout] == true
-      @student.destroy
-      respond_with do |f|
-        f.json { head :success }
-        f.xml  { head :success }
-      end
-      return
-    end
-
     # This one attribute is abstracted as true/false to clients but is actually a date
     # to help with sorting
     if params[:student][:in_queue]
@@ -46,16 +46,7 @@ class StudentsController < ApplicationController
 
     @student.update_attributes(params[:student])
 
-    respond_with do |f|
-      if @student.save
-        f.json { render :json => @student.output_hash }
-        f.xml  { render :json => @student.output_hash }
-      else
-        f.json { render :json => @student.errors, :status => :unprocessable_entity }
-        f.xml  { render :json => @student.errors, :status => :unprocessable_entity }
-      end
-    end
-
+    respond_with @student
   end
 
   private
