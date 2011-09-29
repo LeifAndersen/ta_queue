@@ -18,6 +18,7 @@ class StudentsController < ApplicationController
     @student = Student.new(params[:student].merge( { token: SecureRandom.uuid } ))
     respond_with do |f|
       if @student.save
+        session['user_id'] = @student.id if request.format == 'html'
         f.html { redirect_to (board_path @board) }
         f.json { render :json => { token: @student.token, id: @student.id, username: @student.username } }
         f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username } }
