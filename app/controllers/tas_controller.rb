@@ -28,6 +28,16 @@ class TasController < ApplicationController
 
   def update
     @ta.update_attributes(params[:ta])
+    if params[:accept_student] != nil
+      unless @ta.student.nil?
+        student = @ta.student
+        student.in_queue = false unless @ta.student.nil?
+        student.save
+      end
+      @ta.student = nil
+      @ta.student = @board.students.where(:_id => params[:accept_student]).first
+    end
+    @ta.save
 
     respond_with @ta
   end

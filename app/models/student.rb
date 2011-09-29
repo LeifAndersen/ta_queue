@@ -6,7 +6,7 @@ class Student < QueueUser
 
   validates :location, :presence => true
 
-  scope :in_queue, where(:in_queue.ne => nil)
+  scope :in_queue, where(:in_queue.ne => nil, :ta_id => nil)
 
   def output_hash
     hash = {}

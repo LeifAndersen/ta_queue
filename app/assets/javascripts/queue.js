@@ -21,8 +21,7 @@ function queue_setup()
 	
 	$("#accept_next_button").click(function()
 	{
-		var next_person = $("#queue li").first().find(".student_token").val();
-		alert(next_person);
+    accept_next();
 	});
 
 	$('#freeze_button').click(function() 
@@ -37,6 +36,30 @@ function queue_setup()
 function set_interval(milliseconds)
 {
 	window.setInterval(query_queue, milliseconds);
+}
+
+function accept_next()
+{
+  var next_person = $("#queue li").first().find(".student_token").val();
+
+  user_id = $("#user_id").val();
+  user_token = $("#user_token").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/tas/" + user_id;
+  
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { _method:"PUT", token:user_token, accept_student:next_person },
+    dataType:"json",
+    success:query_queue,
+    });
+
+}
+
+function remove_from_queue()
+{
+
 }
 
 function query_queue()
@@ -71,9 +94,9 @@ function queue_cb(data)
 	{
 		html += '<li>';
 		html += data.tas[i].username;
-		if(data.tas[i].current_student)
+		if(data.tas[i].student)
 		{
-			html += " - currently assigned to " + data.tas[i].current_student;
+			html += " - currently assigned to " + data.tas[i].student;
 		}
 		html += '</li>';
 	}

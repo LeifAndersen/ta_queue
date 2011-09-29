@@ -39,6 +39,7 @@ class StudentsController < ApplicationController
         @student.in_queue = DateTime.now 
       elsif params[:student][:in_queue] == "false"
         @student.in_queue = nil 
+        @student.ta = nil unless @student.ta.nil?
         logger.debug "EXECUTED TA NIL"
       end
       params[:student].delete :in_queue
