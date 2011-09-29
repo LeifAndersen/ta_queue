@@ -31,10 +31,11 @@ class TasController < ApplicationController
     if params[:accept_student] != nil
       unless @ta.student.nil?
         student = @ta.student
-        student.in_queue = false unless @ta.student.nil?
+        student.in_queue = false
+        student.ta = nil
         student.save
+        @ta.save
       end
-      @ta.student = nil
       @ta.student = @board.students.where(:_id => params[:accept_student]).first
     end
     @ta.save

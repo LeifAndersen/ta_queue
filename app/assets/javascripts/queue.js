@@ -12,7 +12,7 @@ function queue_setup()
 	$("#enter_queue_button").click(function ()
 	{
     	enter_queue();
-  	});
+  });
   
 	$("#exit_queue_button").click(function ()
 	{
@@ -21,13 +21,17 @@ function queue_setup()
 	
 	$("#accept_next_button").click(function()
 	{
-    accept_next();
+    var next_person = $("#queue li").first().find(".student_token").val();
+    accept(next_person);
 	});
 
 	$('#freeze_button').click(function() 
 	{
 		return false;
 	});
+
+  is_ta = $("#is_ta").val();
+
   
   // Do an initial query before the 3 second one
   query_queue();
@@ -38,9 +42,8 @@ function set_interval(milliseconds)
 	window.setInterval(query_queue, milliseconds);
 }
 
-function accept_next()
+function accept(usr_id)
 {
-  var next_person = $("#queue li").first().find(".student_token").val();
 
   user_id = $("#user_id").val();
   user_token = $("#user_token").val();
@@ -50,16 +53,27 @@ function accept_next()
   $.ajax({
     type:"POST",
     url:url,
-    data: { _method:"PUT", token:user_token, accept_student:next_person },
+    data: { _method:"PUT", token:user_token, accept_student:usr_id },
     dataType:"json",
     success:query_queue,
     });
 
 }
 
-function remove_from_queue()
+function remove_from_queue(user_id)
 {
-
+  user_token = $("#user_token").val();
+  requesting_user_id = $("#user_id").val();
+  board_title = $("#board_title").val();
+  url = "/boards/" + board_title + "/students/" + user_id;
+  
+  $.ajax({
+    type:"POST",
+    url:url,
+    data: { _method:"PUT", ta_id:requesting_user_id, token:user_token, 'student[in_queue]':false },
+    dataType:"json",
+    success:query_queue,
+    });
 }
 
 function query_queue()
@@ -82,11 +96,28 @@ function queue_cb(data)
 		html += '<li>';
 		html += data.students[i].username;
 		html += '<input type="hidden" class="student_token" name="student_' + i + '" value="' + data.students[i].id + '" />';
+    if(is_ta == "true")
+    {
+      html += '<input type="button" style="float:right;" class="student_remove_button" value="Remove" />';
+      html += '<input type="button" style="float:right;" class="student_accept_button" value="Accept" />';
+    }
 		html += '</li>';
 	}
 	html += '</ul>';
 
 	$("#inner_list").html(html);
+
+  $('.student_remove_button').click(function ()
+  {
+    var temp = $(this).siblings('.student_token').val();
+    remove_from_queue(temp);
+  });
+
+  $(".student_accept_button").click(function() 
+  {
+    var temp = $(this).siblings('.student_token').val();
+    accept(temp);
+  });
 
 	html = ""
 	html += '<ul>';

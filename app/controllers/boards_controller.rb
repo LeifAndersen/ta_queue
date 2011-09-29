@@ -44,6 +44,7 @@ class BoardsController < ApplicationController
 
   def index
     @boards = Board.all
+    respond_with @boards
   end
 
   def show
