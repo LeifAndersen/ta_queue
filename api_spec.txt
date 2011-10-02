@@ -1,60 +1,89 @@
 /*
- * NOTE: Web browsers can "fake" PUT and DELETE requests to the server
- *       by sending _method:"PUT" or _method:"DELETE" in the parameters of
- *       a POST request
+ *  TA Queue API Spec
+ *
+ *  This API follows typical RESTful/Rails conventions for creating/reading/updating/destroying (CRUD) Boards, Students, and TA's.
+ *
+ *  Resource Specs
+ *  =================
+ * 
+ *  Board -
+ *    Boards are the highest level resource. It is called a Board (as opposed to a Queue) because there will be future additions to this app besides
+ *    the Queue portion, such as a discussion board and others, all of which will be part of the Board.
+ *
+ *    Associations -
+ *        has_one Queue
+ *        has_one ...     // Other stuff will be added in the future
+ *        has_many students
+ *        has_many tas    // tas is the plural of TA
+ *  TA -
+ *    TA's are authorized to change their own state (such as username, status, etc), the state of the Queue (active/inactive, frozen/unfrozen), as
+ *    well as the state of a student (in queue/not in queue).
+ *
+ *    Associations -
+ *      belongs_to board
+ *      has_one student // The student they are currently helping, nil if they aren't helping anyone 
+ *
+ *  Student -
+ *    Students are authorized to change their own state, including username, location, and whether they're in the Queue or not
+ *
+ *    Associations -
+ *      belongs_to board
+ *      belongs_to ta
+ *
+ *  NOTES:
+ *  ==============
+ *  The notion of "logging in/out" is synonymous with creating and deleting: to create a TA or Student is to login, and to destroy them is to logout.
+ *  Upon creating a Student or TA, the client will recieve that User's username, id, and token in response. The id and token should be stored somewhere
+ *  persistent as it will be used in most other requests as a sort of "username and password"(See discussion on changing from token-based to HTTP Basic below). 
+ *
+ *  In an effort to keep the state of the Board current in terms of who is logged in and who is not, there will also be some notion of "staying alive" 
+ *  where clients will be required in some way to notify the server on a regular basis that they are still logged in. The database will be purged fairly
+ *  regularly (anywhere from every couple of minutes to every half hour, depending on what is decided) to keep the state current. We welcome feedback
+ *  on the best approach to this.
+ *
+ *  Web browsers can "fake" PUT and DELETE requests to the server
+ *  by sending _method:"PUT" or _method:"DELETE" in the parameters of
+ *  a POST request
+ *
+ *  Up for discussion:
+ *   Should we use HTTP Basic Authentication instead of token based authentication? HTTP Basic would allow authentication without passing parameters,
+ *   which has benefits when using stuff like DELETE. Currently, to DELETEing a student, for example, requires passing a token (and a ta_id if it's a
+ *   TA trying to DELETE) which most frameworks will pass as parameters in the URL, not in the body, which isn't so secure should we decide to go
+ *   secure sometime in the future
  */
 ======================
-      QUEUE API
+      BOARD API
 ======================
 
-POST /boards/:board_title/login_user
-  Parameters: (JSON/XML)
+------ READ ------
+GET /boards/
+  Response:
     {
-      name:"some_name"
-      location:"some_location"    // Optional
-      ta_password:"some_password" // Optional
-    }
-  Response: (JSON/XML)
-    Success code: 200
-    {
-      id:some_id       // This should be kept around for use in all other request
-      token:some_token // Students only have access to the the stupent API, and TA's 
-                       have access to most everything
-    }
-
-    Failure code: 401 // If, for example, you supply to wrong ta password
-    {
-      password: "You supplied an invalid password"
+      boards:
+      [
+        {
+          title:"some_title,
+          active:true/false,
+          frozen:true/false
+        },
+        {
+          ...
+        }
+      ]
     }
 
-PUT /boards/:board_title
-  Parameters: (JSON/XML)
-    {
-      token:"some_token",
-
-      // Optional
-
-      board[frozen]:true/false,    // Must be TA
-      board[active]:true/false    // Must be TA
-    }
-  Response: (JSON/XML)
-    Success code: 200
-    {
-       // Same response as GET /boards/:board_title
-    }
-
-    Failure code: 401 // If, for example, you supply to wrong ta password
-    {
-      password: "You supplied an invalid password"
-    }
-
+// Returns the state of just about everything:
+//   Activity/Frozen state of the queue
+//   Logged in Students/TA's
+//   Students/TA's in the Queue
 GET /boards/:board_title
   Format: HTML - Shows the queue for the user (uses session variable to find who it is)
-  Response: (JSON/XML)
+  Response: 
     Success code: 200
     {
-			active:true/false,
-			frozen:true/false,
+      active:true/false,
+      frozen:true/false,
+
       students: 
       [ 
         student: 
@@ -87,72 +116,280 @@ GET /boards/:board_title
           current_student:some_student_id
         }
       ]
+
+			queue:
+			{
+				students:
+				[
+					{
+						...
+					},
+					{
+						...
+					}
+				],
+				tas:
+				[
+					{
+						...
+					},
+					{
+						...
+					}
+				]
+			}
     }
+
+------ CREATE ------
+
+POST /boards
+  Parameters: (JSON/XML)
+    {
+      title:"board_title"
+      password:"board_title"
+    }
+  Response: (JSON/XML)
+    Success code: 200
+    {
+      title:"board_title",
+      password:"board_title",
+      active:true/false,
+      frozen:true/false
+    }
+
+    Failure code: 401 // If, for example, you supply to wrong ta password
+    {
+      password: "You supplied an invalid password"
+    }
+
+------ UPDATE ------
+
+PUT /boards/:board_title
+  Parameters: (JSON/XML)
+    {
+      id:"some_id",       // Currently, only TA's have access to this api
+      token:"some_token",
+
+      // Optional
+
+      board[frozen]:true/false,    // Must be TA
+      board[active]:true/false     // Must be TA
+      board[title]:"new_title",    // Must be TA or logged in at web interface
+      board[password]:"new_title"  // Must be TA or logged in at web interface
+    }
+  Response: (JSON/XML)
+    Success code: 200
+    {
+       // Same response as GET /boards/:board_title
+    }
+
+    Failure code: 401 // If, for example, you supply to wrong ta password
+    {
+      password: "You supplied an invalid password"
+    }
+
+------ DELETE ------
+
+DELETE /boards/:board_title
+  Parameters:
+    {
+      id:"some_id",      // This may or may not be available to non-web clients since TA's shouldn't be
+      token:"some_token" // allowed to just delete a queue
+    }
+
+=========================
+      QUEUE API
+=========================
+
+GET /boards/:board_title/queue
+	Repsonse:
+		Success code: 200
+		{
+			students:
+			[
+				{
+					id:"some_id",
+					username:"some_username"
+				},
+				{
+					...
+				}
+			],
+			tas:
+			[
+				{
+					id:"some_id",
+					username:"some_username",
+					student:nil/"some_student_username"
+				},
+				{
+					...
+				}
+			]
+		}
 
 =========================
         TA API
 =========================
-	
-PUT /boards/:board_title/tas/:ta_id
+
+------ CREATE ------
+
+POST /boards/:board_title/tas
   Parameters:
     {
-      ta_token:"some_token",
-
-      // Below are optional parameters
-      accept_student:"student_id",
-      logout:true                 // Passing false here will result in a nop
+      queue_password:"some_password",  // TA's cannot create themselves without the queue password
+      ta[username]:"some_username"
     }
-  Response: (JSON/XML)
-    Success code: 200 (Success)
-    { }
-    Failure code: 403 (Forbidden)
-    { }
+  Response:
+    Success code: 201 (created)
+    {
+      id:"ta_id",
+      token:"ta_token", // HOLD ON TO THIS, you'll need it in most every request
+      username:"some_username",
+    }
 
-GET /boards/:board_title/tas/:ta_id
+------ READ ------
+
+GET /boards/:board_title/tas
+  Response:
+    Success code: 200
+    {
+      tas:
+      [
+        {
+          id:"some_id",
+          username:"some_username",
+          student:"some_student_name"   // The student this TA is currently helping, nil if none
+        },
+        {
+          ...
+        }
+      ]
+    }
+
+GET /boards/:board_title/tas/:id
   Response: (JSON/XML)
     Success code: 200 (Success)
     {
-      user:
-      { 
-        id:some_id_2,
-        username:"user2", 
-        location:"location2" 
-      }
+      id:some_id_2,
+      username:"user2", 
     }
+    Failure code: 403 (Forbidden) or 422 (Unprocessable Entity)
+    { }
+
+------ UPDATE ------
+  
+PUT /boards/:board_title/tas/:id
+  Parameters:
+    {
+      token:"some_token",
+
+      // Optional
+
+      accept_student:"student_id",       // Changes the student currently being helped to a new one.
+                                         // If there was a student already associated with this TA,
+                                         // then that student is removed from the queue
+      ta[username]:"some_new_username",
+    }
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    { }
     Failure code: 403 (Forbidden)
     { }
+
+------ DELETE ------
+
+DELETE /boards/:board_title/tas/:id
+  Response:
+    Success code: 200
+    {
+      // Same as GET /boards/:board_title/tas/:id
+    }
+
 
 =========================
       STUDENT API
 =========================
 
+----- CREATE ------
+
+POST /boards/:board_title/students
+  Parameters:
+    {
+      student[username]:"some_username",
+      student[location]:"some_token"
+    }
+  Response:
+    Success code: 201 (Created)
+    {
+      id:"some_id",
+      token:"some_token",         // NOTE: Keep this around for future requests
+      username:"some_username"
+    }
+    Failure code: 422 (Unprocessable Entity)
+    {
+      // Error depends on what was passed
+      username:"Invalid username"
+    }
+
+------ READ ------
+
+GET /boards/:board_title/students/:student_id
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    {
+      id:some_id_2,
+      username:"user2", 
+      location:"location2" 
+    }
+    Failure code: 403 (Forbidden)
+    { }
+
+GET /boards/:board_title/students
+  Response: (JSON/XML)
+    Success code: 200 (Success)
+    {
+      students:
+      [
+        {
+          id:some_id_2,
+          username:"user2", 
+          location:"location2" 
+        },
+        {
+          ...
+        }
+      ]
+    }
+    Failure code: 403 (Forbidden)
+    { }
+
+----- UPDATE -----
+
 PUT /boards/:board_title/students/:student_id
   Parameters:
   {
-    token:"some_token"
+    token:"some_token"            // Interpreted as the student's token, unless ta_id is passed, in which case it's interpreted as the TA's
 
-    // Below are optional parameters
-
+    // Optional parameters
+    ta_id:"some_id"               // If this parameter is passed, the token is interpreted as the TA's token, not the student's
     tutor[in_queue]:true/false,   // true puts the student in the queue, false removes them
-    logout:true                   // Passing false here results in a nop
   }
   Response: (JSON/XML)
     Success code: 200 (Success)
     { }
     Failure code: 403 (Forbidden)
     { }
-	
-GET /boards/:board_title/students/:student_id
-  Response: (JSON/XML)
-    Success code: 200 (Success)
-    {
-      user:
-      { 
-        id:some_id_2,
-        username:"user2", 
-        location:"location2" 
-      }
-    }
 
-    Failure code: 403 (Forbidden)
-    { }
+----- DELETE -----
+
+DELETE /boards/:board_title/students/:student_id
+  Parameters:
+  {
+    token:"some_token"    // If ta_id is passed, this is interpreted as the TA's token, otherwise it should be the student's token
+
+    // Optional
+
+    ta_id:"some_id"
+  }
+  
