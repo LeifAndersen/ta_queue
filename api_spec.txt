@@ -32,6 +32,38 @@
  *
  *  NOTES:
  *  ==============
+ *  Following Rails conventions in passing parameters, if you are updating the "state" of a resource, you must put the attribute you intend to
+ *  update in square brackets ([ ]) after the resource you are updating . If you wanted to update the username of a TA, you would pass the following:
+ *  
+ *    PUT /boards/:board_title/tas/:id
+ *    Parameters:
+ *      {
+ *        ta[username] = "some new username"
+ *      }
+ *
+ *  If you are performing an action, such as telling a TA to "accept" a student, you would pass it normally:
+ *
+ *    PUT /boards/:board_title/tas/:id
+ *    Parameters:
+ *      {
+ *        accept_student = "some_student_id"
+ *      }
+ *  
+ *  As an alternative, we could instead adopt the convention of using parameters for state and URL extensions for actions, such as:
+ *
+ *    PUT /boards/:board_title/tas/:id/accept_student
+ *    Parameters:
+ *      {
+ *        student_id = "some_student_id"
+ *      }
+ *
+ *  Or when entering the queue:
+ *
+ *    GET /boards/:board_title/queue/enter_queue
+ *
+ *  In this instance, it doesn't require passing parameters at all but just visiting the URL. Cleaner syntax, but perhaps a lot of custom URL's. See
+ *  the GitHub issue if you want to contribute to the discussion on this: https://github.com/urails/ta_queue/issues/1
+ *
  *  The notion of "logging in/out" is synonymous with creating and deleting: to create a TA or Student is to login, and to destroy them is to logout.
  *  Upon creating a Student or TA, the client will recieve that User's username, id, and token in response. The id and token should be stored somewhere
  *  persistent as it will be used in most other requests as a sort of "username and password"(See discussion on changing from token-based to HTTP Basic below). 
@@ -145,8 +177,8 @@ GET /boards/:board_title
 POST /boards
   Parameters: (JSON/XML)
     {
-      title:"board_title"
-      password:"board_title"
+      board[title]:"board_title"
+      board[password]:"board_title"
     }
   Response: (JSON/XML)
     Success code: 200
