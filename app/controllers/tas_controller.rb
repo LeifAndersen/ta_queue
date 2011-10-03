@@ -1,7 +1,7 @@
 class TasController < ApplicationController
   before_filter :get_board
   before_filter :get_ta, :except => [:new, :create, :index]
-  before_filter :authorize_ta!, :except => [:create]
+  before_filter :authenticate_ta!, :except => [:create]
 
   respond_to :json, :xml
 

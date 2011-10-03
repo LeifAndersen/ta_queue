@@ -46,14 +46,13 @@ function accept(usr_id)
 {
 
   user_id = $("#user_id").val();
-  user_token = $("#user_token").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/tas/" + user_id;
   
   $.ajax({
     type:"POST",
     url:url,
-    data: { _method:"PUT", token:user_token, accept_student:usr_id },
+    data: { _method:"PUT", accept_student:usr_id },
     dataType:"json",
     success:query_queue,
     });
@@ -62,7 +61,6 @@ function accept(usr_id)
 
 function remove_from_queue(user_id)
 {
-  user_token = $("#user_token").val();
   requesting_user_id = $("#user_id").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/students/" + user_id;
@@ -70,7 +68,7 @@ function remove_from_queue(user_id)
   $.ajax({
     type:"POST",
     url:url,
-    data: { _method:"PUT", ta_id:requesting_user_id, token:user_token, 'student[in_queue]':false },
+    data: { _method:"PUT", ta_id:requesting_user_id, 'student[in_queue]':false },
     dataType:"json",
     success:query_queue,
     });
@@ -95,7 +93,7 @@ function queue_cb(data)
 	{
 		html += '<li>';
 		html += data.students[i].username;
-		html += '<input type="hidden" class="student_token" name="student_' + i + '" value="' + data.students[i].id + '" />';
+		html += '<input type="hidden" class="student_id" name="student_' + i + '" value="' + data.students[i].id + '" />';
     if(is_ta == "true")
     {
       html += '<input type="button" style="float:right;" class="student_remove_button" value="Remove" />';
@@ -109,13 +107,13 @@ function queue_cb(data)
 
   $('.student_remove_button').click(function ()
   {
-    var temp = $(this).siblings('.student_token').val();
+    var temp = $(this).siblings('.student_id').val();
     remove_from_queue(temp);
   });
 
   $(".student_accept_button").click(function() 
   {
-    var temp = $(this).siblings('.student_token').val();
+    var temp = $(this).siblings('.student_id').val();
     accept(temp);
   });
 
@@ -140,14 +138,13 @@ function queue_cb(data)
 function enter_queue()
 {
   user_id = $("#user_id").val();
-  user_token = $("#user_token").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/students/" + user_id;
   // NOTE: You must use _method:"PUT" when updating records
   $.ajax({
     type:"POST",
     url:url,
-    data: { _method:"PUT", token:user_token, "student[in_queue]":true },
+    data: { _method:"PUT", "student[in_queue]":true },
     dataType:"json",
     success:query_queue,
     });
@@ -156,13 +153,12 @@ function enter_queue()
 function exit_queue()
 {
   user_id = $("#user_id").val();
-  user_token = $("#user_token").val();
   board_title = $("#board_title").val();
   url = "/boards/" + board_title + "/students/" + user_id;
   $.ajax({
     type:"POST",
     url:url,
-    data: { _method:"PUT", token:user_token, "student[in_queue]":false },
+    data: { _method:"PUT", "student[in_queue]":false },
     dataType:"json",
     success:query_queue,
     });
