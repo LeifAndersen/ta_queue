@@ -11,4 +11,8 @@ class Ta < QueueUser
     hash
   end
 
+  def self.create_mock options = {}
+    Ta.create!(:username => "Stanley", :token => SecureRandom.uuid)
+  end
+
 end

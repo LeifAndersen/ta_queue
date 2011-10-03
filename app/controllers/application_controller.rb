@@ -55,6 +55,7 @@ class ApplicationController < ActionController::Base
     end
 
     def authenticate_ta! options = {}
+      authorize!
       if options[:current] == true
         unless current_user and current_user.ta? and QueueUser.where(:_id => params[:id]).first == current_user
           send_head_with :unauthorized and return

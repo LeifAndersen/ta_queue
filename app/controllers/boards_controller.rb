@@ -82,33 +82,6 @@ class BoardsController < ApplicationController
     end
   end
 
-  def login_user
-    if params[:ta_password].present?
-      if params[:ta_password] != @board.password
-        flash[:errors] = ["Invalid password for this TA Board"]
-        redirect_to board_login_path and return
-      end
-      @user = @board.tas.new(:username => params[:ta_name], :token => SecureRandom.uuid)
-    else
-      @user = @board.students.new(:username => params[:student_name], :location => params[:location], :token => SecureRandom.uuid)
-    end
-
-    if request.format == "html"
-      session['user_id'] = @user.id.to_s
-    end 
-
-    respond_with do |f|
-      if @user.save
-        f.html { redirect_to @board }
-        f.json { render :json => { :id => @user.id, :token => @user.token } }
-      else
-        flash[:errors] = @user.errors.full_messages
-        f.html { redirect_to board_login_path(@board) }
-        f.json { render head, :status => :unprocessible_entity }
-      end
-    end
-  end
-
   private
 
     def get_board

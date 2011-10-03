@@ -16,6 +16,9 @@ describe StudentsController do
       #@full_student = Student.create!(:username => "Bob", :token => SecureRandom.uuid, :location => "some_place")
       set_api_headers
     end
+
+  it "fails when student tries to change another student's state"
+
   describe "CRUD student" do
     it "successfully creates a student" do
       post :create, { :student => @full_student_hash, :board_id => @board.title }
@@ -84,6 +87,17 @@ describe StudentsController do
       response.code.should == "200"
 
       QueueUser.where(:_id => @full_student_hash[:id]).first.should be_nil
+    end
+  end
+
+  describe "student actions" do
+    before :all do
+      @ta = Ta.create_mock
+    end
+
+    it "should accept student" do
+      authenticate @ta 
+
     end
   end
 end

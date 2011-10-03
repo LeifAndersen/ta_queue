@@ -10,14 +10,17 @@ class TasController < ApplicationController
   end
 
   def create 
+    if params[:password] != @board.password
+      send_head_with :unauthorized and return
+    end
     @ta = @board.tas.new(params[:ta].merge( { token: SecureRandom.uuid } ) )
 
     respond_with do |f|
       if @ta.save
         session['user_id'] = @ta.id if request.format == 'html'
         f.html { redirect_to board_path @board }
-        f.json { render :json => { token: @ta.token, id: @ta.id, username: @ta.username } }
-        f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username } }
+        f.json { render :json => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
+        f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
       else
         f.html { redirect_to board_login_path @board }
         f.json { render :json => @ta.errors, :status => :unprocessable_entity }
@@ -40,7 +43,9 @@ class TasController < ApplicationController
     end
     @ta.save
 
-    respond_with @ta
+    respond_with do |f|
+      f.json { render :json => @ta }
+    end
   end
 
   def destroy
