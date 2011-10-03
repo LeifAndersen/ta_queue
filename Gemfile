@@ -23,7 +23,9 @@ end
 
 group :test, :development do
   gem 'rspec'
+  gem 'rspec-rails'
   gem 'capybara'
+  gem "spork", "> 0.9.0.rc"
 end
 
 gem 'jquery-rails'
