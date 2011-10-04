@@ -8,6 +8,10 @@ TaQueue::Application.routes.draw do
     post "login_user"
     resources :tas
     resources :students
+    resource :queue, :only => [:show, :update] do
+      get "enter_queue"
+      get "exit_queue"
+    end
   end
 
   root :to => "boards#index"

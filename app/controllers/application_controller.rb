@@ -30,6 +30,14 @@ class ApplicationController < ActionController::Base
 
     end
 
+    def get_board
+      if params[:controller] == "boards"
+        @board = Board.where(:title => params[:id]).first
+      else
+        @board = Board.where(:title => params[:board_id]).first
+      end
+    end
+
     def authenticate_student! options = {}
       authorize!
       if options[:current] == true
