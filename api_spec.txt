@@ -35,13 +35,17 @@
  *  NOTES:
  *  ==============
  *
+ *  Generally speaking, security is not a priority of this service. Passwords are used to create Queues and for TA's to log in, but at the time of
+ *  this writing, these passwords are considered non-critical and are not encrypted. There is not much to gain by securing this information at
+ *  this point in time
+ *
  *  We will here make a distinction between changing the "state" of a resource (such as a Student's username) and performing an "action", such as
  *  entering the queue, etc.
  *
  *  State:
  *  -----------------
  *  Following Rails conventions in passing parameters, if you are updating the "state" of a resource, you must put the attribute you intend to
- *  update in square brackets ([ ]) after the resource you are updating . If you wanted to update the username of a TA, you would pass the following:
+ *  update in square brackets ([ ]) after the resource you are updating . If you wanted to update the username of a TA, you would use the following request:
  *  
  *    PUT /boards/:board_title/tas/:id
  *    Parameters:
@@ -49,7 +53,7 @@
  *        ta[username] = "some new username"
  *      }
  *
- *  Same goes for creation:
+ *  Same goes for creation.
  *
  *  Action:
  *  -----------------
@@ -112,8 +116,16 @@
       BOARD API
 ======================
 
+Actions:
+-------------
+  URL:
+    /boards/:board_title/ -
+      toggle_active - Authentication - TA
+
 ------ READ ------
-GET /boards/
+
+GET /boards
+  Authentication: None
   Response:
     {
       boards:
@@ -135,6 +147,7 @@ GET /boards/
 //   Students/TA's in the Queue
 GET /boards/:board_title
   Format: HTML - Shows the queue for the user (uses session variable to find who it is)
+  Authentication: Student or TA
   Response: 
     Success code: 200
     {
@@ -174,36 +187,42 @@ GET /boards/:board_title
         }
       ]
 
-			queue:
-			{
-				students:
-				[
-					{
-						...
-					},
-					{
-						...
-					}
-				],
-				tas:
-				[
-					{
-						...
-					},
-					{
-						...
-					}
-				]
-			}
+      queue:
+      {
+        students:
+        [
+          {
+            ...
+          },
+          {
+            ...
+          }
+        ],
+        tas:
+        [
+          {
+            ...
+          },
+          {
+            ...
+          }
+        ]
+      }
     }
+
+/*
+ *  NOTE: Creating/modifying/updating requires sending a master password explicity in the params
+ */
 
 ------ CREATE ------
 
 POST /boards
+  Authentication: Master password
   Parameters: (JSON/XML)
     {
       board[title]:"board_title"
       board[password]:"board_title"
+      master_password:"master_password" // This will be defined in a config file, by default it is create_queue
     }
   Response: (JSON/XML)
     Success code: 200
@@ -222,12 +241,11 @@ POST /boards
 ------ UPDATE ------
 
 PUT /boards/:board_title
+  Authentication: Master password
   Parameters: (JSON/XML)
     {
-      id:"some_id",       // Currently, only TA's have access to this api
-      token:"some_token",
-
       // Optional
+      master_password:"some_password"
 
       board[frozen]:true/false,    // Must be TA
       board[active]:true/false     // Must be TA
@@ -248,42 +266,50 @@ PUT /boards/:board_title
 ------ DELETE ------
 
 DELETE /boards/:board_title
+  Authentication: Master password
   Parameters:
-    {
-      id:"some_id",      // This may or may not be available to non-web clients since TA's shouldn't be
-      token:"some_token" // allowed to just delete a queue
-    }
+    { }
 
 =========================
       QUEUE API
 =========================
 
+Actions:
+---------
+  URL:
+    /boards/:board_title/queue/ -
+      enter_queue - Authentication: Student
+      exit_queue  - Authentication: Student
+      freeze      - Authentication: TA
+
+
 GET /boards/:board_title/queue
-	Repsonse:
-		Success code: 200
-		{
-			students:
-			[
-				{
-					id:"some_id",
-					username:"some_username"
-				},
-				{
-					...
-				}
-			],
-			tas:
-			[
-				{
-					id:"some_id",
-					username:"some_username",
-					student:nil/"some_student_username"
-				},
-				{
-					...
-				}
-			]
-		}
+  Authentication: Student or TA
+  Repsonse:
+    Success code: 200
+    {
+      students:
+      [
+        {
+          id:"some_id",
+          username:"some_username"
+        },
+        {
+          ...
+        }
+      ],
+      tas:
+      [
+        {
+          id:"some_id",
+          username:"some_username",
+          student:nil/"some_student_username"
+        },
+        {
+          ...
+        }
+      ]
+    }
 
 =========================
         TA API
@@ -292,6 +318,7 @@ GET /boards/:board_title/queue
 ------ CREATE ------
 
 POST /boards/:board_title/tas
+  Authentication: Queue password sent in params
   Parameters:
     {
       queue_password:"some_password",  // TA's cannot create themselves without the queue password
@@ -304,10 +331,16 @@ POST /boards/:board_title/tas
       token:"ta_token", // HOLD ON TO THIS, you'll need it in most every request
       username:"some_username",
     }
+    Failure code: 403 (Forbidden) if bad authentication, 422 (Unprocessable entity) if bad data
+    {
+      // Use this to notify the user of what went wrong
+      some_error:"Something bad happened"
+    }
 
 ------ READ ------
 
 GET /boards/:board_title/tas
+  Authentication: Student or TA
   Response:
     Success code: 200
     {
@@ -325,38 +358,41 @@ GET /boards/:board_title/tas
     }
 
 GET /boards/:board_title/tas/:id
+  Authentication: Student or TA
   Response: (JSON/XML)
     Success code: 200 (Success)
     {
       id:some_id_2,
       username:"user2", 
     }
-    Failure code: 403 (Forbidden) or 422 (Unprocessable Entity)
+    Failure code: 403 (Forbidden)
     { }
 
 ------ UPDATE ------
   
 PUT /boards/:board_title/tas/:id
+  Authentication: TA
   Parameters:
     {
-      token:"some_token",
-
       // Optional
 
-      accept_student:"student_id",       // Changes the student currently being helped to a new one.
-                                         // If there was a student already associated with this TA,
-                                         // then that student is removed from the queue
-      ta[username]:"some_new_username",
+      ta[username]:"some_new_username"
     }
   Response: (JSON/XML)
     Success code: 200 (Success)
-    { }
-    Failure code: 403 (Forbidden)
-    { }
+    {
+      // See GETing a Queue
+    }
+    Failure code: 403 (Forbidden) if bad authorization, 422 (Unprocessable Entity) if bad data
+    { 
+      // Should be used to notify the user of what went wrong
+      username:"Another TA is already using this username"
+    }
 
 ------ DELETE ------
 
 DELETE /boards/:board_title/tas/:id
+  Authentication: TA
   Response:
     Success code: 200
     {
@@ -368,13 +404,21 @@ DELETE /boards/:board_title/tas/:id
       STUDENT API
 =========================
 
+Actions:
+---------
+  URL:
+    /boards/:board_title/queue/ -
+      ta_accept            - Authentication: TA
+      ta_remove_from_queue - Authentication: Student
+
 ----- CREATE ------
 
 POST /boards/:board_title/students
+  Authentication: None
   Parameters:
     {
       student[username]:"some_username",
-      student[location]:"some_token"
+      student[location]:"location"
     }
   Response:
     Success code: 201 (Created)
@@ -385,13 +429,15 @@ POST /boards/:board_title/students
     }
     Failure code: 422 (Unprocessable Entity)
     {
-      // Error depends on what was passed
-      username:"Invalid username"
+      // Error depends on what was passed, these should be used to notify the user of a client
+      // of what went wrong
+      username:"Your username and location are already taken. Are you already logged in on another device?"
     }
 
 ------ READ ------
 
 GET /boards/:board_title/students/:student_id
+  Authentication: Student or TA
   Response: (JSON/XML)
     Success code: 200 (Success)
     {
@@ -403,6 +449,7 @@ GET /boards/:board_title/students/:student_id
     { }
 
 GET /boards/:board_title/students
+  Authentication: Student or TA
   Response: (JSON/XML)
     Success code: 200 (Success)
     {
@@ -424,29 +471,26 @@ GET /boards/:board_title/students
 ----- UPDATE -----
 
 PUT /boards/:board_title/students/:student_id
+  Authentication: Student
   Parameters:
   {
-    token:"some_token"            // Interpreted as the student's token, unless ta_id is passed, in which case it's interpreted as the TA's
-
     // Optional parameters
-    ta_id:"some_id"               // If this parameter is passed, the token is interpreted as the TA's token, not the student's
-    tutor[in_queue]:true/false,   // true puts the student in the queue, false removes them
+
+    tutor[username] = "some_username"
+    tutor[location] = "some_location"
   }
   Response: (JSON/XML)
     Success code: 200 (Success)
-    { }
+    { 
+      // Same as GETting a Queue
+    }
     Failure code: 403 (Forbidden)
     { }
 
 ----- DELETE -----
 
 DELETE /boards/:board_title/students/:student_id
+  Authentication: Student or TA
   Parameters:
-  {
-    token:"some_token"    // If ta_id is passed, this is interpreted as the TA's token, otherwise it should be the student's token
-
-    // Optional
-
-    ta_id:"some_id"
-  }
+  { }
   
