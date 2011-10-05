@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe StudentsController do
+
     before :all do
       Board.destroy_all
       Student.destroy_all 
@@ -76,7 +77,6 @@ describe StudentsController do
 
     it "fails destroying without authorization" do
       delete :destroy, { :board_id => @board.title, :id => @full_student_hash[:id] }
-
       response.code.should == "401"
     end
 

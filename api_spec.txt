@@ -1,7 +1,9 @@
 /*
  *  TA Queue API Spec
  *
- *  This API follows typical RESTful/Rails conventions for creating/reading/updating/destroying (CRUD) Boards, Students, and TA's.
+ *  This API follows typical RESTful/Rails conventions for creating/reading/updating/destroying (CRUD) resources, such as Boards, Students, and TA's.
+ *
+ *  Please read this entire spec before building a client, as it clarifies conventions used in the API and general tips.
  *
  *  Resource Specs
  *  =================
@@ -11,13 +13,13 @@
  *    the Queue portion, such as a discussion board and others, all of which will be part of the Board.
  *
  *    Associations -
- *        has_one Queue
+ *        has_one queue
  *        has_one ...     // Other stuff will be added in the future
  *        has_many students
  *        has_many tas    // tas is the plural of TA
  *  TA -
  *    TA's are authorized to change their own state (such as username, status, etc), the state of the Queue (active/inactive, frozen/unfrozen), as
- *    well as the state of a student (in queue/not in queue).
+ *    well as some of the state of a student (in queue/not in queue).
  *
  *    Associations -
  *      belongs_to board
@@ -32,6 +34,12 @@
  *
  *  NOTES:
  *  ==============
+ *
+ *  We will here make a distinction between changing the "state" of a resource (such as a Student's username) and performing an "action", such as
+ *  entering the queue, etc.
+ *
+ *  State:
+ *  -----------------
  *  Following Rails conventions in passing parameters, if you are updating the "state" of a resource, you must put the attribute you intend to
  *  update in square brackets ([ ]) after the resource you are updating . If you wanted to update the username of a TA, you would pass the following:
  *  
@@ -41,32 +49,55 @@
  *        ta[username] = "some new username"
  *      }
  *
- *  If you are performing an action, such as telling a TA to "accept" a student, you would pass it normally:
+ *  Same goes for creation:
  *
- *    PUT /boards/:board_title/tas/:id
- *    Parameters:
- *      {
- *        accept_student = "some_student_id"
- *      }
- *  
- *  As an alternative, we could instead adopt the convention of using parameters for state and URL extensions for actions, such as:
+ *  Action:
+ *  -----------------
+ *  When performing an action, such as adding yourself to the queue, those actions will be performed by a single GET request with no parameters
+ *  via URL extensions (as much as possible).
  *
- *    PUT /boards/:board_title/tas/:id/accept_student
- *    Parameters:
- *      {
- *        student_id = "some_student_id"
- *      }
- *
- *  Or when entering the queue:
+ *  For example, if you are a student and you want to enter the queue, you would perform the following request:
  *
  *    GET /boards/:board_title/queue/enter_queue
  *
- *  In this instance, it doesn't require passing parameters at all but just visiting the URL. Cleaner syntax, but perhaps a lot of custom URL's. See
- *  the GitHub issue if you want to contribute to the discussion on this: https://github.com/urails/ta_queue/issues/1
+ *  Since you are using HTTP Basic authentication (read further down in the notes for clarification on HTTP Basic), the server will be able to
+ *  figure out that you are a student and add you to the queue. If you were a TA, it would reject the request.
+ *
+ *  NOTE: The general convention is the following: when an action occurs between two resources, it's the receiving resource that implements the action.
+ *        In the above example, the Queue is the receiver of the action from the Student, so it is part of the Queue API, not the Student's.
+ *
+ *  Other Examples of performing actions:
+ *
+ *    TA accepting a student:
+ *
+ *      GET /boards/:board_title/students/:student_id/ta_accept
+ *
+ *    TA removing a student:
+ *
+ *      GET /boards/:board_title/students/:student_id/ta_remove_from_queue
+ *
+ *    Student exiting the Queue:
+ *  
+ *      GET /boards/:board_title/queue/exit_queue
+ *  
+ *    Student upvoting a discussion question (Not yet implemented, just an example)
+ *
+ *      GET /boards/:board_title/discussion/questions/:id/upvote
+ *
+ *  ----------------------------------------------------------------------------------------
  *
  *  The notion of "logging in/out" is synonymous with creating and deleting: to create a TA or Student is to login, and to destroy them is to logout.
  *  Upon creating a Student or TA, the client will recieve that User's username, id, and token in response. The id and token should be stored somewhere
- *  persistent as it will be used in most other requests as a sort of "username and password"(See discussion on changing from token-based to HTTP Basic below). 
+ *  persistent as it will be used in most other requests as a sort of "username and password"
+ *
+ *  HTTP Basic:
+ *  ---------------------------
+ *  HTTP Basic is a method of authenticating where you send your username and password in the HTTP Header. See this wikipedia article for further clarification:
+ *  
+ *    http://en.wikipedia.org/wiki/Basic_access_authentication
+ *
+ *  Note that you will need to base64-encode the credentials, most frameworks have this implemented, or one is surely available on the internet somewhere
+ *  ---------------------------
  *
  *  In an effort to keep the state of the Board current in terms of who is logged in and who is not, there will also be some notion of "staying alive" 
  *  where clients will be required in some way to notify the server on a regular basis that they are still logged in. The database will be purged fairly
@@ -76,12 +107,6 @@
  *  Web browsers can "fake" PUT and DELETE requests to the server
  *  by sending _method:"PUT" or _method:"DELETE" in the parameters of
  *  a POST request
- *
- *  Up for discussion:
- *   Should we use HTTP Basic Authentication instead of token based authentication? HTTP Basic would allow authentication without passing parameters,
- *   which has benefits when using stuff like DELETE. Currently, to DELETEing a student, for example, requires passing a token (and a ta_id if it's a
- *   TA trying to DELETE) which most frameworks will pass as parameters in the URL, not in the body, which isn't so secure should we decide to go
- *   secure sometime in the future
  */
 ======================
       BOARD API
