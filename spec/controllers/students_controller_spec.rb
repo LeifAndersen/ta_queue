@@ -1,23 +1,23 @@
 require 'spec_helper'
 
 describe StudentsController do
+
+  before :each do
+    set_api_headers
+  end
+
+  it "fails when student tries to change another student's state"
+
     before :all do
       Board.destroy_all
       Student.destroy_all 
-      @board = Board.create!(:title => "CS1410", :password => "some_password")
-      @full_student_hash = { :username => "Bob", :location => "some_place" }
+      @board = Factory :board
+      @full_student_hash = Factory.attributes_for :student
     end
 
     after :all do
       @board.destroy
     end
-
-    before :each do
-      #@full_student = Student.create!(:username => "Bob", :token => SecureRandom.uuid, :location => "some_place")
-      set_api_headers
-    end
-
-  it "fails when student tries to change another student's state"
 
   describe "CRUD student" do
     it "successfully creates a student" do
@@ -76,7 +76,6 @@ describe StudentsController do
 
     it "fails destroying without authorization" do
       delete :destroy, { :board_id => @board.title, :id => @full_student_hash[:id] }
-
       response.code.should == "401"
     end
 
@@ -91,13 +90,65 @@ describe StudentsController do
   end
 
   describe "student actions" do
-    before :all do
-      @ta = Ta.create_mock
+    before :each do
+      @full_student_hash = Factory.attributes_for :student
+      @ta = @board.tas.create!(Factory.attributes_for :ta )
+      @student = @board.students.create!(@full_student_hash)
     end
 
-    it "should accept student" do
+    after :each do
+      Ta.destroy_all
+      Student.destroy_all
+    end
+
+    it "should successfully be accepted by TA" do
       authenticate @ta 
 
+      @ta.student.should be_nil
+
+      get :ta_accept, { :board_id => @board.title, :id => @student.id }
+
+      response.code.should == "200"
+
+      ta = Ta.find(@ta.id)
+
+      ta.student.should_not be_nil
+      ta.student.id.should == @student.id
+
+      @student = Student.find(@student.id)
+      @student.ta.should_not be_nil
+      @student.ta.id.should == @ta.id
+    end
+
+    it "should reject ta_accept from a student" do
+      authenticate @student
+
+      get :ta_accept, { :board_id => @board.title, :id => @student.id }
+
+      response.code.should == "401"
+    end
+
+    it "should reject ta_accept without authentication" do
+      get :ta_accept, { :board_id => @board.title, :id => @student.id }
+
+      response.code.should == "401"
+    end
+
+    it "should properly detach the current student when accepting a new student" do
+      authenticate @ta
+
+      @ta.student = @student
+      @ta.save
+
+      @second_student = @board.students.create!(Factory.attributes_for :student)
+
+      get :ta_accept, { :board_id => @board.title, :id => @second_student.id }
+
+      response.code.should == "200"
+
+      @ta = Ta.find(@ta.id)
+
+      @ta.student.id.should == @second_student.id
     end
   end
 end

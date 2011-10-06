@@ -3,17 +3,6 @@ class ApplicationController < ActionController::Base
 
   #before_filter :authorize!
 
-  def get_ta
-    @ta ||= @board.tas.where(:_id => params[:id]).first
-    if !@ta
-      respond_with do |f|
-        f.json { head :bad_request }
-        f.xml { head :bad_request }
-      end
-    end
-  end
-
-
   private
 
     def current_user
@@ -28,6 +17,14 @@ class ApplicationController < ActionController::Base
         @current_user ||= QueueUser.where(:_id => session['user_id']).first
       end
 
+    end
+
+    def get_board
+      if params[:controller] == "boards"
+        @board = Board.where(:title => params[:id]).first
+      else
+        @board = Board.where(:title => params[:board_id]).first
+      end
     end
 
     def authenticate_student! options = {}

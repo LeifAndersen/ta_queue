@@ -51,14 +51,25 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.1.2)
+    configatron (2.8.3)
+      yamler (>= 0.1.0)
+    cover_me (1.2.0)
+      configatron
+      hashie
     daemon_controller (0.2.6)
     diff-lcs (1.1.3)
     erubis (2.7.0)
     execjs (1.2.8)
       multi_json (~> 1.0)
+    factory_girl (2.1.2)
+      activesupport
+    factory_girl_rails (1.2.0)
+      factory_girl (~> 2.1.0)
+      railties (>= 3.0.0)
     fastthread (1.0.7)
     ffi (1.0.9)
     haml (3.1.3)
+    hashie (1.1.0)
     hike (1.2.1)
     i18n (0.6.0)
     jquery-rails (1.0.14)
@@ -155,6 +166,7 @@ GEM
       multi_json (>= 1.0.2)
     xpath (0.1.4)
       nokogiri (~> 1.3)
+    yamler (0.1.0)
 
 PLATFORMS
   ruby
@@ -163,7 +175,9 @@ DEPENDENCIES
   bson_ext
   capybara
   coffee-rails (~> 3.1.0)
+  cover_me
   execjs
+  factory_girl_rails
   haml
   jquery-rails
   mongoid

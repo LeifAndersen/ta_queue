@@ -1,7 +1,8 @@
 class StudentsController < ApplicationController
   before_filter :get_board
   before_filter :get_student, :except => [:index, :new, :create]
-  before_filter :authenticate_current_student_or_ta!, :except => [:create]
+  before_filter :authenticate_current_student_or_ta!, :except => [:create, :ta_accept]
+  before_filter :authenticate_ta!, :only => [:ta_accept]
 
   respond_to :json, :xml
   respond_to :html, :only => [:create, :update]
@@ -61,29 +62,24 @@ class StudentsController < ApplicationController
     end
   end
 
+###### ACTIONS ######
+
+  def ta_accept
+    current_user.accept_student! @student
+    respond_with @board, :include => [:students, :tas]
+  end
+
+###### PRIVATE ######
+
   private
-=begin
-    def authorize_student!
-      if session['user_id'] != @student.id
-        # TODO Fix security bug, need to check token on ta
-        if params[:token].nil? || (@student.token != params[:token] && @board.tas.where(:_id => params[:ta_id]).first.nil?)
-          respond_with do |f| 
-            f.json { head :unauthorized }
-            f.xml  { head :unauthorized }
-          end
-          return
-        end
-      end
-    end
-=end
 
     def get_board
       @board ||= Board.where(:title => params[:board_id]).first
       if !@board
         puts "NO BOARD!!!"
         respond_with do |f|
-          f.json { head :bad_request }
-          f.xml  { head :bad_request }
+          f.json { render :json => { error: "Invalid board id" }, :status => :bad_request }
+          f.xml  { render :json => { error: "Invalid board id" }, :status => :bad_request }
         end
         return
       end
@@ -93,8 +89,8 @@ class StudentsController < ApplicationController
       @student ||= @board.students.where(:_id => params[:id]).first
       if !@student
         respond_with do |f|
-          f.json { head :bad_request }
-          f.xml { head :bad_request }
+          f.json { render :json => { error: "This student does not exist or is not part of this board" }, :status => :bad_request }
+          f.xml  { render :json => { error: "This student does not exist or is not part of this board" }, :status => :bad_request }
         end
       end
     end

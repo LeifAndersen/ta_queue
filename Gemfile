@@ -7,6 +7,7 @@ gem 'passenger'
 gem 'execjs'
 gem 'haml'
 gem 'therubyracer'
+gem 'cover_me', :group => :test
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -25,6 +26,7 @@ group :test, :development do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'factory_girl_rails'
   gem "spork", "> 0.9.0.rc"
 end
 

@@ -16,4 +16,30 @@ class Student < QueueUser
     hash[:in_queue] = (in_queue.nil? ? false : true)
     hash
   end
+
+  def enter_queue
+    if self.in_queue.nil?
+      self.in_queue = DateTime.now
+    end
+  end
+
+  def enter_queue!
+    enter_queue
+    save
+  end
+
+  def exit_queue
+    unless self.in_queue.nil?
+      self.in_queue = nil
+      unless self.ta.nil?
+        self.ta = nil
+      end
+    end
+  end
+
+  def exit_queue!
+    exit_queue
+    save
+  end
+
 end
