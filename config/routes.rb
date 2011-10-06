@@ -7,7 +7,10 @@ TaQueue::Application.routes.draw do
     post "logout"
     post "login_user"
     resources :tas
-    resources :students
+    resources :students do
+      get "ta_accept", :on => :member
+      get "ta_remove", :on => :member
+    end
     resource :queue, :only => [:show, :update] do
       get "enter_queue"
       get "exit_queue"

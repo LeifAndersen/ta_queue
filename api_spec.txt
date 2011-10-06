@@ -78,7 +78,7 @@
  *
  *    TA removing a student:
  *
- *      GET /boards/:board_title/students/:student_id/ta_remove_from_queue
+ *      GET /boards/:board_title/students/:student_id/ta_remove
  *
  *    Student exiting the Queue:
  *  
@@ -408,8 +408,8 @@ Actions:
 ---------
   URL:
     /boards/:board_title/queue/ -
-      ta_accept            - Authentication: TA
-      ta_remove_from_queue - Authentication: Student
+      ta_accept - Authentication: TA
+      ta_remove - Authentication: Student // Allows a TA to remove this student from the queue
 
 ----- CREATE ------
 

@@ -1,6 +1,6 @@
 class TasController < ApplicationController
   before_filter :get_board
-  before_filter :get_ta, :except => [:new, :create, :index]
+  before_filter :get_ta, :only => [:update, :show, :destroy]
   before_filter :authenticate_ta!, :except => [:create]
 
   respond_to :json, :xml
@@ -57,14 +57,7 @@ class TasController < ApplicationController
 
   private
 
-    def get_board
-      @board ||= Board.where(:title => params[:board_id]).first
-      if !@board
-        respond_with do |f|
-          f.json { head :bad_request }
-          f.xml  { head :bad_request }
-        end
-        return
-      end
+    def get_ta
+      @ta = @board.tas.find(params[:id])
     end
 end

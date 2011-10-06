@@ -15,4 +15,19 @@ class Ta < QueueUser
     Ta.create!(:username => "Stanley", :token => SecureRandom.uuid)
   end
 
+  def accept_student stud
+    unless self.student.nil?
+      temp = self.student
+      temp.ta = nil
+      temp.save
+      self.save
+    end
+      self.student = stud
+  end
+
+  def accept_student! stud
+    accept_student stud
+    save
+  end
+
 end
