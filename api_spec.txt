@@ -45,7 +45,8 @@
  *  State:
  *  -----------------
  *  Following Rails conventions in passing parameters, if you are updating the "state" of a resource, you must put the attribute you intend to
- *  update in square brackets ([ ]) after the resource you are updating . If you wanted to update the username of a TA, you would use the following request:
+ *  update in square brackets ([ ]) after the name of the resource you are updating . If you wanted to update the username of a TA,
+ *  you would use the following request:
  *  
  *    PUT /boards/:board_title/tas/:id
  *    Parameters:
@@ -84,7 +85,7 @@
  *  
  *      GET /boards/:board_title/queue/exit_queue
  *  
- *    Student upvoting a discussion question (Not yet implemented, just an example)
+ *    Student upvoting a discussion question (Not yet part of the API, just an example)
  *
  *      GET /boards/:board_title/discussion/questions/:id/upvote
  *
@@ -111,16 +112,15 @@
  *  Web browsers can "fake" PUT and DELETE requests to the server
  *  by sending _method:"PUT" or _method:"DELETE" in the parameters of
  *  a POST request
+ *
+ *  Link to JSON
+ *
+ *  API clarification
  */
+
 ======================
       BOARD API
 ======================
-
-Actions:
--------------
-  URL:
-    /boards/:board_title/ -
-      toggle_active - Authentication - TA
 
 ------ READ ------
 
@@ -278,9 +278,8 @@ Actions:
 ---------
   URL:
     /boards/:board_title/queue/ -
-      enter_queue - Authentication: Student
-      exit_queue  - Authentication: Student
-      freeze      - Authentication: TA
+      enter_queue   - Authentication: Student
+      exit_queue    - Authentication: Student
 
 
 GET /boards/:board_title/queue
@@ -288,6 +287,9 @@ GET /boards/:board_title/queue
   Repsonse:
     Success code: 200
     {
+
+			frozen:true/false
+
       students:
       [
         {
@@ -310,6 +312,18 @@ GET /boards/:board_title/queue
         }
       ]
     }
+
+PUT /boards/:board_title/queue
+  Authentication: TA
+	Parameters
+		{
+			frozen:true/false			
+		}
+  Repsonse:
+    Success code: 200
+		{
+			// see GET /boards/:board_title/queue
+		}
 
 =========================
         TA API
