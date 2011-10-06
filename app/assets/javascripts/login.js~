@@ -21,7 +21,7 @@ $(document).ready(function()
 	    $('#ta_panel').toggle();
 	  }
 	  
-	  if ($(this).attr('id') == 'ta_tab' && $('#ta_panel').css('display') == 'none')
+	  else if ($(this).attr('id') == 'ta_tab' && $('#ta_panel').css('display') == 'none')
 	  {
 	    $('#student_panel').toggle();
 	    $('#ta_panel').toggle();

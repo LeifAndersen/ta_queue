@@ -1,0 +1,48 @@
+/*
+ *
+ * Global styles for TA Queue website
+ *
+ */
+/* CSS Reset */
+td
+{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+/* End CSS Reset */
+
+body
+{
+	background-color: #5b5b5b;
+}
+
+@font-face
+{
+  font-family: chalk;
+  src: url('/assets/j.d.ttf');
+}
+
+@font-face
+{
+  font-family: ta_queue;
+  src: url('/assets/MotorOil1937M54.ttf');
+}
+
+#content
+{
+	width: 1000px;
+	margin: 0 auto 0 auto;
+}
+
+.right
+{
+  float: right;
+}
+
+.left
+{
+  float: left;
+}
+

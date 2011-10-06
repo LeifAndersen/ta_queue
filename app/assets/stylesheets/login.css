@@ -1,0 +1,147 @@
+/*
+ * This stylesheet pertains to login.html.haml
+ *
+ */
+ 
+#content
+{
+	width: 600px;
+  margin: 0px auto 0px auto;
+}
+
+.chalkboard
+{
+  margin-top: 100px;
+  width: inherit;
+  -moz-box-shadow: 0px 0px 100px 0px #000;
+  box-shadow: 0px 0px 100px 0px #000;
+  -webkit-box-shadow:  0px 0px 100px 0px #000;
+}
+
+#top_tab_bar
+{
+  position: relative;
+  height: 100%;
+  font-family: ta_queue; 
+}
+
+#ta_tab, #student_tab
+{
+  position: absolute;
+  padding: 5px; 
+  top: -28px;
+  color: #aa6622;
+  text-shadow: 1px 1px 1px #eeee88;
+  cursor: pointer;
+}
+
+#student_tab
+{
+  left: 0px;
+  background: url('/assets/h_wood.jpg') 0px 0px repeat-x;
+}
+
+#ta_tab
+{
+  left: 100px;
+  background: url('/assets/h_wood.jpg') 0px 0px repeat-x;
+}
+
+#login
+{
+
+}
+
+#status_bar
+{
+  position: relative;
+  width: 100%;
+  height: 49px;
+  background: #666666 url('/assets/status_bar.png') top left repeat-x;
+  color: #ffffff;
+  font-family: ta_queue;
+  text-shadow: 0px 0px 3px #000;
+}
+
+#class_title
+{
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+#panes
+{
+  background: #222 url('/assets/login_chalk_dust.png') top left no-repeat;
+  padding: 10px;
+  font-family: chalk;
+  color: #fff;
+  font-size: 10pt;
+  
+  
+}
+
+#panes form
+{
+  width: 100%;
+}
+
+#panes form input
+{
+  display: block;
+  width: 200px;
+  border: none;
+  color: #666;
+  font-family: chalk;
+  font-size: 18pt;
+  padding: 2px 5px;
+}
+
+#panes form input:hover
+{
+  color: #fff;
+}
+
+#panes .submit
+{
+  width: auto;
+  cursor: pointer;
+  margin-right: 105px;
+  margin-top: -115px;
+  padding: 14px 18px;
+  -moz-border-radius: 20px;
+
+  
+}
+
+#student_username, #ta_username
+{
+  background: url('/assets/username_underline.png') 0px 27px no-repeat;
+  margin: 15px 0px 15px 85px;
+}
+
+#ta_password, #student_location
+{
+  background: url('/assets/password_underline.png') -2px 28px no-repeat;
+  margin: 15px 0px 50px 85px;
+}
+
+.submit
+{
+  background: url('/assets/login_circle.png') -3px -7px no-repeat;
+}
+
+.login_hint
+{
+  display: block;
+  margin-top: 20px;
+}
+
+#student_panel
+{
+ 
+}
+
+#ta_panel
+{
+   display: none;
+}

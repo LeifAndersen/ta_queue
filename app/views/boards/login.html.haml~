@@ -23,7 +23,7 @@
         #status_bar
           #class_title.left
             = "Login to " + @board.title
-          -#%table.board_status_table.right
+       -# %table.board_status_table.right
             %tr
               %th Status
               %th Students in queue

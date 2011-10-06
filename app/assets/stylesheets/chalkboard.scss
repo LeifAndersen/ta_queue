@@ -1,0 +1,44 @@
+/*
+ * Styles for chalkboard elements
+ */
+
+.chalkboard
+{
+	border-spacing: 0;
+}
+
+/*.tl
+{
+  -moz-border-radius-topleft: 5px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+} */
+
+.chalkboard td
+{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.tl, .ml, .bl, .tr, .mr, .br
+{
+  width: 15px;
+  background-color: red;
+}
+
+.tl, .tm, .tr, .bl, .bm, .br
+{
+  height: 15px;
+  background-color: red;
+}
+
+.tm, .bm
+{
+  background: url("/assets/h_wood.jpg") top left repeat-x;
+}
+
+.ml, .mr
+{
+  background: url("/assets/v_wood.jpg") top left repeat-y;
+}
