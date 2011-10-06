@@ -288,7 +288,7 @@ GET /boards/:board_title/queue
     Success code: 200
     {
 
-			frozen:true/false
+      frozen:true/false
 
       students:
       [
@@ -315,15 +315,15 @@ GET /boards/:board_title/queue
 
 PUT /boards/:board_title/queue
   Authentication: TA
-	Parameters
-		{
-			frozen:true/false			
-		}
+  Parameters
+    {
+      frozen:true/false     
+    }
   Repsonse:
     Success code: 200
-		{
-			// see GET /boards/:board_title/queue
-		}
+    {
+      // see GET /boards/:board_title/queue
+    }
 
 =========================
         TA API
