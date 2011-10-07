@@ -10,7 +10,7 @@ class TasController < ApplicationController
   end
 
   def create 
-    if params[:password] != @board.password
+    if params[:queue_password] != @board.password
       send_head_with :unauthorized and return
     end
     @ta = @board.tas.new(params[:ta].merge( { token: SecureRandom.uuid } ) )
