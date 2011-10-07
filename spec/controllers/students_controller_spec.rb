@@ -37,6 +37,8 @@ describe StudentsController do
       @full_student_hash.merge!({ :id => res_hash['id'], :token => res_hash['token']})
     end
 
+    it "receives proper validation errors"
+
     it "successfully reads a student" do
       authenticate QueueUser.where(:_id => @full_student_hash[:id]).first
       get :show, { :id => @full_student_hash[:id], :board_id => @board.title }
@@ -59,16 +61,6 @@ describe StudentsController do
       response.code.should == "401"
     end
 
-    it "successfully updates the student's in_queue" do
-      authenticate QueueUser.where(:_id => @full_student_hash[:id]).first
-      put :update, { :student => { :in_queue => true}, :id => @full_student_hash[:id], :board_id => @board.title }
-      response.code.should ==  "200"
-
-      res_hash = ActiveSupport::JSON.decode(response.body)
-      res_hash.count.should == 4
-      res_hash['in_queue'].to_s.should == "true"
-    end
-
     it "fails updating w/o credentials" do
       put :update, { :student => { :in_queue => true}, :id => @full_student_hash[:id], :board_id => @board.title }
       response.code.should ==  "401"
@@ -87,6 +79,14 @@ describe StudentsController do
 
       QueueUser.where(:_id => @full_student_hash[:id]).first.should be_nil
     end
+  end
+
+  describe "API content" do
+    
+    it "returns proper average-case in JSON"
+
+    it "orders students in the order they join the queue"
+
   end
 
   describe "student actions" do

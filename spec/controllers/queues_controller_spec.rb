@@ -21,7 +21,9 @@ describe QueuesController do
       set_api_headers
     end
 
-    it "should allow ta to enter queue" do
+    it "should toggle_frozen correctly"
+
+    it "should allow student to enter queue" do
       authenticate @student
       get :enter_queue, { :board_id => @board.title }
 
@@ -34,7 +36,7 @@ describe QueuesController do
       res_hash['students'][0]['username'].should == student.username
     end
 
-    it "should allow ta to exit queue" do
+    it "should allow student to exit queue" do
       authenticate @student
       get :exit_queue, { :board_id => @board.title }
 
@@ -48,6 +50,8 @@ describe QueuesController do
 
       res_hash['students'].should be_empty
     end
+
+    it "receives proper validation errors"
 
   end
 end
