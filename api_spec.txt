@@ -153,6 +153,7 @@ GET /boards/:board_title
     {
       active:true/false,
       frozen:true/false,
+			title:"some_title",
 
       students: 
       [ 
@@ -229,8 +230,6 @@ POST /boards
     {
       title:"board_title",
       password:"board_title",
-      active:true/false,
-      frozen:true/false
     }
 
     Failure code: 401 // If, for example, you supply to wrong ta password

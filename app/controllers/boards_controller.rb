@@ -1,9 +1,9 @@
 class BoardsController < ApplicationController
   respond_to :xml, :json, :html
   before_filter :get_board, :except => [:new, :create, :index]
-  before_filter :authorize_ta!, :only => [:update]
+  before_filter :authenticate_ta!, :only => [:update]
+  before_filter :authenticate_user_for_current_board, :only => [:show]
   before_filter :filter_users, :only => [:login, :login_user]
-  before_filter :filter_master_password, :only => [:create]
 
   def create
     if params[:master_password] == "create_queue"
@@ -48,39 +48,9 @@ class BoardsController < ApplicationController
   end
 
   def show
-    @current_user = QueueUser.where(:_id => session['user_id']).first
-    if @current_user.nil?
-      if session['user_id']
-        session.delete 'user_id'
-      end
-      redirect_to board_login_path(@board) and return
-    end
     respond_with @board, :include => [:tas, :students]
   end
 
-  def login
-    @student = Student.new
-    @ta = Ta.new
-  end
-
-  def logout
-    if request.format == "html"
-      user_id = session['user_id']
-      session.delete 'user_id'
-    else
-      user_id = params[:id]
-    end
-
-    @user = QueueUser.where(:_id => user_id).first
-
-    respond_with do |f|
-      if @user
-        @user.destroy
-      end
-        f.html { redirect_to board_login_path }
-        f.json { render head, :status => :success }
-    end
-  end
 
   private
 
@@ -107,7 +77,15 @@ class BoardsController < ApplicationController
       end
     end
 
-    def filter_master_password
+    def authenticate_user_for_current_board
+      authorize!
+      if @board.queue_users.where(:_id => current_user.id).first.nil?
+        respond_with do |f|
+          f.html { redirect_to board_login_path @board }
+          f.json { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
+          f.xml  { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
+        end
+      end
     end
 
 end

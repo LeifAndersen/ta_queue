@@ -55,18 +55,6 @@ class StudentsController < ApplicationController
 
   private
 
-    def get_board
-      @board ||= Board.where(:title => params[:board_id]).first
-      if !@board
-        puts "NO BOARD!!!"
-        respond_with do |f|
-          f.json { render :json => { error: "Invalid board id" }, :status => :bad_request }
-          f.xml  { render :json => { error: "Invalid board id" }, :status => :bad_request }
-        end
-        return
-      end
-    end
-
     def get_student
       @student ||= @board.students.where(:_id => params[:id]).first
       if !@student

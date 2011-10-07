@@ -3,8 +3,8 @@ class Board
 
   field :title, type: String
   field :password, type: String
-  field :frozen, type: Boolean
-  field :active, type: Boolean
+  field :frozen, type: Boolean, default: false
+  field :active, type: Boolean, default: false
 
   has_many :students, dependent: :destroy
   has_many :tas, dependent: :destroy
@@ -16,6 +16,7 @@ class Board
     hash = Hash.new
     hash[:active] = active
     hash[:frozen] = frozen
+    hash[:title] = self.title
     hash[:tas] = tas.as_json
     hash[:students] = students.in_queue.as_json
     hash
@@ -23,6 +24,10 @@ class Board
 
   def as_json options = {}
     state
+  end
+  
+  def queue_users
+    QueueUser.where(:board_id => self.id)
   end
 
   def to_xml options = {}
