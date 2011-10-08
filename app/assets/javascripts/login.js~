@@ -42,16 +42,7 @@ $(document).ready(function()
           }	        
   	    );
   	    
-  	     $('#student_tab').hover(
-  	      function ()
-  	      {
-            $(this).css('text-shadow','1px 1px 1px #eeee88');
-          },
-          function ()
-          {
-            $(this).css('text-shadow','1px 1px 1px #eeee88'); 
-          }	 
-        );
+  	    $('#student_tab').hover( function (){}, function (){});
   	    
   	    $('#ta_tab .left_tab').css(
   	      {
@@ -125,16 +116,7 @@ $(document).ready(function()
           }	        
   	    );
   	    
-  	    $('#ta_tab').hover(
-  	      function ()
-  	      {
-            $(this).css('text-shadow','1px 1px 1px #eeee88');
-          },
-          function ()
-          {
-            $(this).css('text-shadow','1px 1px 1px #eeee88'); 
-          }	 
-        );
+  	    $('#ta_tab').hover(function (){}, function (){});
   	    
   	    $('#ta_tab .left_tab').css(
   	      {

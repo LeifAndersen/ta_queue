@@ -1,5 +1,5 @@
 = content_for :javascripts do javascript_include_tag "jquery", "login" end
-= content_for :stylesheets do stylesheet_link_tag "style.css", "login.css", "chalkboard.scss" end
+= content_for :stylesheets do stylesheet_link_tag "style.scss", "login.scss", "chalkboard.scss" end
 %table{ :class => "chalkboard" }
   %tr
     %td{ :class => "tl" }
@@ -10,11 +10,13 @@
           .content_tab.left
             Student
           .right_tab.left
+          .bottom_shadow
         #ta_tab
           .left_tab.left
           .content_tab.left
             TA
           .right_tab.left
+          .bottom_shadow
     %td{ :class => "tr" }
   %tr
     %td{ :class => "ml" }

@@ -48,7 +48,7 @@
 
 .bl
 {
-  background: url('/assets/bl_corner.jpg') -15px 0px no-repeat;
+  background: url('/assets/bl_corner.jpg') 0px -15px no-repeat;
 }
 
 .br
