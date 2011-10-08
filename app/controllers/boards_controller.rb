@@ -51,6 +51,10 @@ class BoardsController < ApplicationController
     respond_with @board, :include => [:tas, :students, :queue]
   end
 
+  def login
+    @ta = Ta.new
+    @student = Student.new    
+  end
 
   private
 
