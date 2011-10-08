@@ -19,7 +19,7 @@ describe TasController do
     end
   describe "CRUD ta" do
     it "successfully creates a ta" do
-      post :create, { :ta => @full_ta_hash, :password => @board.password, :board_id => @board.title }
+      post :create, { :ta => @full_ta_hash, :queue_password => @board.password, :board_id => @board.title }
 
       response.code.should == "201"
 
@@ -33,6 +33,8 @@ describe TasController do
 
       @full_ta_hash.merge!({ :id => res_hash['id'], :token => res_hash['token']})
     end
+
+    it "receives proper validation errors"
 
     it "fails to create a ta without proper password" do
       post :create, { :ta => @full_ta_hash, :password => "wrong_password", :board_id => @board.title }

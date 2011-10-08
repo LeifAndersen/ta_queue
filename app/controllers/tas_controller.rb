@@ -11,7 +11,10 @@ class TasController < ApplicationController
 
   def create 
     if params[:queue_password] != @board.password
-      send_head_with :unauthorized and return
+      respond_with do |f|
+        f.json { render :json => { :error => "Invalid password" }, :status => :unauthorized }
+      end
+      return
     end
     @ta = @board.tas.new(params[:ta].merge( { token: SecureRandom.uuid } ) )
 

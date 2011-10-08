@@ -16,8 +16,8 @@ class ApplicationController < ActionController::Base
       else
         @current_user ||= QueueUser.where(:_id => session['user_id']).first
       end
-
     end
+
 
     def get_board
       if params[:controller] == "boards"

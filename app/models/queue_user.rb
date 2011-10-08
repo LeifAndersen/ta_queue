@@ -16,6 +16,7 @@ class QueueUser
     output_hash.to_xml 
   end
 
+
   def ta?
     self.class == Ta
   end

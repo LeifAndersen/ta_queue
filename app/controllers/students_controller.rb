@@ -32,27 +32,9 @@ class StudentsController < ApplicationController
   end
 
   def update
-    # This one attribute is abstracted as true/false to clients but is actually a date
-    # to help with sorting
-    if params[:student][:in_queue]
-      if params[:student][:in_queue].to_s == "true"
-        @student.in_queue = DateTime.now 
-      elsif params[:student][:in_queue].to_s == "false"
-        @student.in_queue = nil 
-        @student.ta = nil unless @student.ta.nil?
-        logger.debug "EXECUTED TA NIL"
-      end
-      params[:student].delete :in_queue
-      @student.save
-    end
-
     @student.update_attributes(params[:student])
-    @student.save
 
-    respond_with do |f|
-      f.json { render :json => @student }
-      f.xml  { render :xml => @student }
-    end
+    respond_with @student
   end
 
   def destroy
@@ -72,18 +54,6 @@ class StudentsController < ApplicationController
 ###### PRIVATE ######
 
   private
-
-    def get_board
-      @board ||= Board.where(:title => params[:board_id]).first
-      if !@board
-        puts "NO BOARD!!!"
-        respond_with do |f|
-          f.json { render :json => { error: "Invalid board id" }, :status => :bad_request }
-          f.xml  { render :json => { error: "Invalid board id" }, :status => :bad_request }
-        end
-        return
-      end
-    end
 
     def get_student
       @student ||= @board.students.where(:_id => params[:id]).first

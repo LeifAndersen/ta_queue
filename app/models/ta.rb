@@ -5,7 +5,7 @@ class Ta < QueueUser
 
   def output_hash
     hash = {}
-    hash[:id] = id
+    hash[:id] = id.to_s
     hash[:username] = username
     hash[:student] = self.student.nil? ? nil : self.student.username;
     hash

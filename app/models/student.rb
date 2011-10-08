@@ -10,7 +10,7 @@ class Student < QueueUser
 
   def output_hash
     hash = {}
-    hash[:id] = id
+    hash[:id] = id.to_s
     hash[:username] = username
     hash[:location] = location
     hash[:in_queue] = (in_queue.nil? ? false : true)

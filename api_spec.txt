@@ -39,6 +39,12 @@
  *  this writing, these passwords are considered non-critical and are not encrypted. There is not much to gain by securing this information at
  *  this point in time
  *
+ *  The server does (in theory) thorough error checking, including returning errors in JSON describing what went wrong. Developers building client
+ *  applications should use these to their advantage instead of implementing their own data validation. For example, if a user tries to login as a TA,
+ *  but provides the wrong password, the server will return a 400 status code (Unauthorized), and return the JSON:
+ *  
+ *    { :error => "Invalid password" }
+ *
  *  We will here make a distinction between changing the "state" of a resource (such as a Student's username) and performing an "action", such as
  *  entering the queue, etc.
  *
@@ -113,9 +119,19 @@
  *  by sending _method:"PUT" or _method:"DELETE" in the parameters of
  *  a POST request
  *
- *  Link to JSON
+ *  As a general rule of thumb, resources have the following actions and return the following responses:
  *
- *  API clarification
+ *    Action:                             Returns:                      HTTP Request Prototype    Example Request        Example Request (nested resource)
+ *    ========                            =========                     ===================       =================      ==================
+ *    Create                              State of resource             POST   /resources         POST   /boards         POST   /boards/cs1410/students
+ *    Read (all resources)                Array of states of resources  GET    /resources         GET    /boards         GET    /boards/cs1410/students
+ *    Read (single resource)              State of resource             GET    /resources/:id     GET    /boards/cs1410  GET    /boards/cs1410/students/34cd
+ *    Update                              State of resource             PUT    /resources/:id     PUT    /boards/cs1410  PUT    /boards/cs1410/students/34cd
+ *    Destroy                             State of resource             DELETE /resources/:id     DELETE /boards/cs1410  DELETE /boards/cs1410/students/34cd
+ *
+ *  NOTE: All id's and tokens should be interpreted as strings, NOT as integers (Server uses MongoDB which uses hex hashes for id's instead of incrementing integers)
+ *
+ *  TODO: Link to JSON
  */
 
 ======================
@@ -131,9 +147,7 @@ GET /boards
       boards:
       [
         {
-          title:"some_title,
-          active:true/false,
-          frozen:true/false
+          // See GET /boards/:board_title for how each board is defined
         },
         {
           ...
@@ -152,61 +166,30 @@ GET /boards/:board_title
     Success code: 200
     {
       active:true/false,
-      frozen:true/false,
+			title:"some_title",
 
       students: 
       [ 
-        student: 
         { 
-          id:some_id_1,
-          username:"user1", 
-          location:"location1" 
+          // See GET /boards/:board_title/students/:id
         },
-        student: 
         { 
-          id:some_id_2,
-          username:"user2", 
-          location:"location2" 
+          ...
         }
       ]
       tas:
       [
-        ta:
         {
-          id:some_ta_id_1,
-          username:"ta1",
-          location:"ta_location_1",
-          current_student:some_student_id
+          // See GET /boards/:board_title/tas/:id
         },
-        ta:
         {
-          id:some_ta_id_2,
-          username:"ta2",
-          location:"ta_location_2",
-          current_student:some_student_id
+          ...
         }
       ]
 
       queue:
       {
-        students:
-        [
-          {
-            ...
-          },
-          {
-            ...
-          }
-        ],
-        tas:
-        [
-          {
-            ...
-          },
-          {
-            ...
-          }
-        ]
+        // See GET /boards/:board_title/queue
       }
     }
 
@@ -227,10 +210,7 @@ POST /boards
   Response: (JSON/XML)
     Success code: 200
     {
-      title:"board_title",
-      password:"board_title",
-      active:true/false,
-      frozen:true/false
+      // See /boards/:board_title
     }
 
     Failure code: 401 // If, for example, you supply to wrong ta password
@@ -287,7 +267,6 @@ GET /boards/:board_title/queue
   Repsonse:
     Success code: 200
     {
-
       frozen:true/false
 
       students:
@@ -317,7 +296,7 @@ PUT /boards/:board_title/queue
   Authentication: TA
   Parameters
     {
-      frozen:true/false     
+      queue[frozen]:true/false     
     }
   Repsonse:
     Success code: 200
@@ -343,7 +322,7 @@ POST /boards/:board_title/tas
     {
       id:"ta_id",
       token:"ta_token", // HOLD ON TO THIS, you'll need it in most every request
-      username:"some_username",
+      username:"some_username"
     }
     Failure code: 403 (Forbidden) if bad authentication, 422 (Unprocessable entity) if bad data
     {
