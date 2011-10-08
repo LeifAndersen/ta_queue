@@ -48,7 +48,7 @@ class BoardsController < ApplicationController
   end
 
   def show
-    respond_with @board, :include => [:tas, :students]
+    respond_with @board, :include => [:tas, :students, :queue]
   end
 
 
