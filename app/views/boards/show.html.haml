@@ -1,20 +1,41 @@
 = content_for :javascripts do javascript_include_tag "jquery", "boards", "queue" end
-= content_for :stylesheets do stylesheet_link_tag "style.scss", "show.scss", "chalkboard.scss" end
-#header
-  Logged in as 
-  %b= @current_user.username
-  = hidden_field_tag "board_title", @board.title
-  = hidden_field_tag "user_token", @current_user.token
-  = hidden_field_tag "user_id", @current_user.id.to_s
-  = hidden_field_tag "is_ta", @current_user.ta?
-  %br/
-  %ul#ta_list
-  - if @current_user.student?
-    = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete
-  - else
-    = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
-  - if @current_user.ta?
-    %input{ :id => "accept_next_button", :type => "button", :value => "Accept Next" }
+= content_for :stylesheets do stylesheet_link_tag "style.scss", "show.css.scss", "chalkboard.scss" end
+%table{ :class => "chalkboard" }
+  %tr
+    %td{ :class => "tl" }
+    %td{ :class => "tm" }
+    %td{ :class => "tr" }
+  %tr
+    %td{ :class => "ml" }
+      #left_tab_bar
+        #queue_tab
+          .top_tab.left
+          .content_tab.left
+            Queue
+          .bottom_tab.left
+      #left_column
+    %td{ :class => "mm" }
+      #spacer
+    %td{ :class => "mr" }
+  %tr
+    %td{ :class => "bl" }
+    %td{ :class => "bm" }
+    %td{ :class => "br" }
+  
+Logged in as 
+%b= @current_user.username
+= hidden_field_tag "board_title", @board.title
+= hidden_field_tag "user_token", @current_user.token
+= hidden_field_tag "user_id", @current_user.id.to_s
+= hidden_field_tag "is_ta", @current_user.ta?
+%br/
+%ul#ta_list
+- if @current_user.student?
+  = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete
+- else
+  = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
+- if @current_user.ta?
+  %input{ :id => "accept_next_button", :type => "button", :value => "Accept Next" }
 #body
   #list
     #list_header

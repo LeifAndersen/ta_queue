@@ -147,6 +147,11 @@
   padding: 2px 5px;
 }
 
+#panes form input:focus
+{
+  outline: none;
+}
+
 #panes form input:hover
 {
   color: #fff;
