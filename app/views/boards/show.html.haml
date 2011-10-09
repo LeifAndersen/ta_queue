@@ -1,4 +1,5 @@
-= content_for :javascripts do javascript_include_tag "boards", "queue" end
+= content_for :javascripts do javascript_include_tag "jquery", "boards", "queue" end
+= content_for :stylesheets do stylesheet_link_tag "style.scss", "show.scss", "chalkboard.scss" end
 #header
   Logged in as 
   %b= @current_user.username
