@@ -20,11 +20,35 @@ describe QueuesController do
   end
 
   describe "API" do
-    it "show" do
-      get :show, { :board_id => @board.title }
+    it "update" do
+      authenticate @ta
+
+      @board.queue.frozen.should == false
+
+      put :update, { :board_id => @board.title, :queue => { :frozen => true } }
+
+      res = decode response.body
+
+      res.should be_empty
+
+      response.code.should == "200"
     end
 
-    it "update"
+    it "show" do
+      get :show, { :board_id => @board.title }
+
+      response.code.should == "200"
+      
+      res_hash = decode response.body
+
+
+      res_hash.count.should == 3
+
+      res_hash['frozen'].should_not be_nil
+      res_hash['students'].should_not be_nil
+      res_hash['tas'].should_not be_nil
+    end
+
 
   end
 
@@ -39,7 +63,7 @@ describe QueuesController do
       student = Student.find(@student.id)
 
       student.in_queue.should_not be_nil
-      res_hash['queue']['students'][0]['username'].should == student.username
+      res_hash['students'][0]['username'].should == student.username
     end
 
     it "should allow student to exit queue" do
@@ -54,10 +78,12 @@ describe QueuesController do
 
       student.in_queue.should be_nil
 
-      res_hash['queue']['students'].should be_empty
+      res_hash['students'].should be_empty
     end
 
     it "receives proper validation errors"
+
+    it "Doesn't respond to anything when frozen"
 
   end
 end

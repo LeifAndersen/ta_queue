@@ -21,9 +21,9 @@ class ApplicationController < ActionController::Base
 
     def get_board
       if params[:controller] == "boards"
-        @board = Board.where(:title => params[:id]).first
+        @board ||= Board.where(:title => params[:id]).first
       else
-        @board = Board.where(:title => params[:board_id]).first
+        @board ||= Board.where(:title => params[:board_id]).first
       end
     end
 
