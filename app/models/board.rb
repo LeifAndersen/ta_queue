@@ -15,6 +15,8 @@ class Board
   validates :title, :uniqueness => true
   validates :title, :format => { :with => /^[a-zA-Z_\-0-9]*$/, :message => "The title of a queue must contain only numbers, letters, _, and -"}
 
+  before_save :purge_if_inactive
+
   def state
     hash = Hash.new
     hash[:active] = active
@@ -41,4 +43,14 @@ class Board
   def to_param
     self.title
   end
+
+  private
+    def purge_if_inactive
+      unless active
+        self.students.each do |stud|
+          stud.in_queue = false
+          stud.save
+        end
+      end
+    end
 end

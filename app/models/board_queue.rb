@@ -10,10 +10,15 @@ class BoardQueue
 
   def state
     hash = {}
-    hash[:frozen] = self.frozen
+    hash[:frozen] = self.frozen 
+    hash[:active] = self.board.active
     hash[:students] = self.students.as_json
     hash[:tas] = self.tas.as_json
     hash
+  end
+
+  def active
+    self.board.active
   end
 
   def as_json options = {}
@@ -25,7 +30,7 @@ class BoardQueue
   end
 
   def tas
-    self.board.students.in_queue
+    self.board.tas
   end
 
 end

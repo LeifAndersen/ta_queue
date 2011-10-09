@@ -38,6 +38,9 @@ end
 end
 
 Spork.each_run do
+  Board.destroy_all
+  QueueUser.destroy_all
+  BoardQueue.destroy_all
   # This code will be run each time you run your specs.
 
 end
