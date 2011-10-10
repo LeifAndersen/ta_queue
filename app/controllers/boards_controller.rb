@@ -4,22 +4,15 @@ class BoardsController < ApplicationController
   before_filter :authenticate_ta!, :only => [:update]
   before_filter :authenticate_user_for_current_board!, :only => [:show]
   before_filter :filter_users, :only => [:login, :login_user]
+  before_filter :authenticate_master_password!, :only => [:create, :destroy]
+
+  @@master_password = "create_queue"
 
   def create
-    if params[:master_password] == "create_queue"
       @board = Board.new(params[:board])
-      @board.frozen = false
-      @board.active = false
+      @board.save
 
-      if @board.save
-        redirect_to board_login_path(@board)
-      else
-        render :new
-      end
-    else
-      flash[:error] = "Invalid master password"
-      redirect_to new_board_path
-    end
+      respond_with @board
   end
 
   def update
@@ -44,6 +37,11 @@ class BoardsController < ApplicationController
   def login
     @ta = Ta.new
     @student = Student.new    
+  end
+
+  def destroy
+    @board.destroy
+    respond_with @board
   end
 
   private
@@ -78,6 +76,14 @@ class BoardsController < ApplicationController
           f.html { redirect_to board_login_path @board }
           f.json { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
           f.xml  { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
+        end
+      end
+    end
+
+    def authenticate_master_password!
+      unless params[:master_password] == @@master_password
+        respond_with do |f|
+          f.json { render :json => { :error => "Destorying a Board requires a valid master password." }, :status => :unauthorized }
         end
       end
     end

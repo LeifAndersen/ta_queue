@@ -140,19 +140,13 @@ describe BoardsController do
     it "successfully creates board" do
       # Hold off on these until we're sure we want the web client to be able to
       # create queues
-=begin
       post :create, { :master_password => "create_queue", :board => @board_hash }
 
       response.code.should == "201"
 
       res_hash = decode response.body
 
-      res_hash.count.should == 2
-
-      res_hash["title"].should == @board_hash[:title]
-
-      res_hash["password"].should == @board_hash[:password]
-=end
+      Board.where(:title => @board_hash[:title]).first.should_not be_nil
     end
 
     it "successfully updates board" do
@@ -176,14 +170,19 @@ describe BoardsController do
       @ta = @board_auth.tas.create!(Factory.attributes_for(:ta))
     end
 
-    it "index succeeds with both authentication" do
+    it "index succeeds with ta authentication" do
       get :index
 
       response.code.should == "200"
 
       authenticate @ta
 
+      get :index
 
+      response.code.should == "200"
+    end
+
+    it "index succeeds with student authentication" do
       get :index
 
       response.code.should == "200"
@@ -195,7 +194,7 @@ describe BoardsController do
       response.code.should == "200"
     end
 
-    it "show should fail with no authentication" do
+    it "show should succeed with ta authentication" do
       get :show, { :id => @board_auth.title }
 
       response.code.should == "401"
@@ -204,11 +203,7 @@ describe BoardsController do
 
       res['error'].should_not be_nil
 
-
-    end
-
-    it "show should succeed with ta authentication" do
-      authenticate @ta
+      authenticate @ta 
 
       get :show, { :id => @board_auth.title }
 
@@ -221,9 +216,72 @@ describe BoardsController do
       get :show, { :id => @board_auth.title }
 
       response.code.should == "200"
+    end
+
+    it "update should succeed with ta authentication" do
+      put :update, { :id => @board_auth.title, :board => { :active => true } }
+
+      response.code.should == "401"
+
+      authenticate @ta
+
+      put :update, { :id => @board_auth.title, :board => { :active => true } }
+
+      response.code.should == "200"
 
     end
-    
+
+    it "update should fail with student authentication" do
+      authenticate @student
+
+      put :update, { :id => @board_auth.title, :board => { :active => true } }
+
+      response.code.should == "401"
+    end
+
+    it "destroy fails no authentication" do
+      delete :destroy, { :id => @board_auth.title }
+
+      response.code.should == "401"
+
+      Board.where(:_id => @board_auth.id).first.should_not be_nil
+    end
+
+    it "destroy fails ta authentication" do
+      authenticate @ta
+      delete :destroy, { :id => @board_auth.title }
+
+      response.code.should == "401"
+
+      Board.where(:_id => @board_auth.id).first.should_not be_nil
+    end
+
+    it "destroy fails student authentication" do
+      authenticate @student
+      delete :destroy, { :id => @board_auth.title }
+
+      response.code.should == "401"
+
+      Board.where(:_id => @board_auth.id).first.should_not be_nil
+    end
+
+    it "destroy fails with invalid master password" do
+      authenticate @student
+      delete :destroy, { :id => @board_auth.title }
+
+      response.code.should == "401"
+
+      Board.where(:_id => @board_auth.id).first.should_not be_nil
+    end
+
+    it "destroy succeeds with valid master password" do
+      authenticate @student
+      delete :destroy, { :id => @board_auth.title, :master_password => "create_queue" }
+
+      response.code.should == "200"
+
+      Board.where(:_id => @board_auth.id).first.should be_nil
+    end
   end
 
 end

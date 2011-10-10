@@ -69,7 +69,43 @@ describe QueuesController do
       res_hash['tas'].count.should == 4 # the extra is due to the ta created in the before :each block
     end
 
-    it "students should come back in the order they joined the queue"
+    it "students should come back in the order they joined the queue" do
+      @board.students.destroy_all
+      @board.tas.destroy_all
+
+      time = DateTime.now
+      # Order shoudl be 2, 5, 0, 1, 3, 4
+      order = {}
+
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 2.seconds ))
+      order["2"] = stud.id.to_s
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 3.seconds ))
+      order["3"] = stud.id.to_s
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time ))
+      order["0"] = stud.id.to_s
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 4.seconds ))
+      order["4"] = stud.id.to_s
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 5.seconds ))
+      order["5"] = stud.id.to_s
+      stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 1.second  ))
+      order["1"] = stud.id.to_s
+
+
+      get :show, { :board_id => @board.title }
+
+      response.code.should == "200"
+      
+      res = decode response.body
+
+      res['students'].count.should == 6
+
+      @board = Board.where(:title => @board.title).first
+      students = @board.queue.students.to_a
+
+      students.each_index do |i|
+        students[i].id.to_s.should == order[i.to_s].to_s
+      end
+    end
   end
 
   describe "actions" do
