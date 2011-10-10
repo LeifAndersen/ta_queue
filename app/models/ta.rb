@@ -4,6 +4,9 @@ class Ta < QueueUser
   has_one :student, :class_name => "Student", dependent: :nullify
 
   field :status, type: String, default: ""
+  attr_accessor :password
+
+  validate :check_password, :on => :create
 
   def output_hash
     hash = {}
@@ -33,4 +36,11 @@ class Ta < QueueUser
     save
   end
 
+  private
+
+    def check_password
+      if self.password != self.board.password
+        self.errors["password"] = "is invalid"
+      end
+    end
 end

@@ -10,13 +10,15 @@ class TasController < ApplicationController
   end
 
   def create 
+=begin
     if params[:queue_password] != @board.password
       respond_with do |f|
         f.json { render :json => { :error => "Invalid password" }, :status => :unauthorized }
       end
       return
     end
-    @ta = @board.tas.new(params[:ta].merge( { token: SecureRandom.uuid } ) )
+=end
+    @ta = @board.tas.new(params[:ta].merge( :password => params[:queue_password]))
 
     respond_with do |f|
       if @ta.save
@@ -25,7 +27,7 @@ class TasController < ApplicationController
         f.json { render :json => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
         f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
       else
-        f.html { redirect_to board_login_path @board }
+        f.html { flash[:errors] = @ta.errors.full_messages; redirect_to board_login_path @board }
         f.json { render :json => @ta.errors, :status => :unprocessable_entity }
         f.json { render :xml => @ta.errors, :status => :unprocessable_entity }
       end
@@ -53,6 +55,9 @@ class TasController < ApplicationController
 
   def destroy
     @ta.destroy
+    if request.format == "html"
+      session.delete 'user_id'
+    end
     respond_with do |f|
       f.html { redirect_to board_login_path @board }
     end

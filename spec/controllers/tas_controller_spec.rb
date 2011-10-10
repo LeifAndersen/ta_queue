@@ -68,7 +68,9 @@ describe TasController do
   end
 
   describe "Errors" do
-    it "receives proper validation errors"
+    it "receives proper validation errors" do
+
+    end
   end
 
   describe "CRUD ta" do
@@ -88,7 +90,7 @@ describe TasController do
     it "fails to create a ta without proper password" do
       post :create, { :ta => @full_ta_hash, :password => "wrong_password", :board_id => @board.title }
 
-      response.code.should == "401"
+      response.code.should == "422"
     end
 
     it "successfully reads a ta" do

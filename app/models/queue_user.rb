@@ -2,7 +2,7 @@ class QueueUser
   include Mongoid::Document
 
   field :username, type: String
-  field :token, type: String
+  field :token, type: String, default: -> { SecureRandom.uuid }
   field :location, type: String
 
   validates :username, :token, :presence => true

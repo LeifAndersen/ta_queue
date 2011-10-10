@@ -15,6 +15,7 @@ FactoryGirl.define do
   factory :queue_user do
     username { Factory.next :username }
     token { SecureRandom.uuid }
+    password "some_password"
   end
 
   factory :student, :parent => :queue_user do

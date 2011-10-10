@@ -16,7 +16,7 @@ class StudentsController < ApplicationController
 
   # NOTE: DOES NOT CREATE OBJECT, UPDATES OBJECT
   def create 
-    @student = @board.students.new(params[:student].merge( { token: SecureRandom.uuid } ))
+    @student = @board.students.new(params[:student])
     respond_with do |f|
       if @student.save
         session['user_id'] = @student.id if request.format == 'html'
