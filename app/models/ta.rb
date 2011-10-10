@@ -3,11 +3,14 @@ class Ta < QueueUser
 
   has_one :student, :class_name => "Student", dependent: :nullify
 
+  field :status, type: String, default: ""
+
   def output_hash
     hash = {}
     hash[:id] = id.to_s
     hash[:username] = username
-    hash[:student] = self.student.nil? ? nil : self.student.username;
+    hash[:student] = self.student
+    hash[:status] = self.status
     hash
   end
 

@@ -17,24 +17,73 @@ describe TasController do
       #@full_student = Student.create!(:username => "Bob", :token => SecureRandom.uuid, :location => "some_place")
       set_api_headers
     end
+  describe "API" do
+    before :each do
+      @ta = @board.tas.create!(Factory.attributes_for(:ta))
+    end
+
+    after :each do
+      @ta.destroy
+    end
+
+    it "show w/out student" do
+      authenticate @ta
+
+      get :show, { :board_id => @board.title, :id => @ta.id }
+
+      response.code.should == "200"
+
+      res = decode response.body
+
+      res['id'].should == @ta.id.to_s
+      res['username'].should == @ta.username
+      res['status'].should == @ta.status
+      res['student'].should == nil
+    end
+
+    it "show with student" do
+      student = @board.students.create!(Factory.attributes_for(:student))
+      @ta.student = student
+      @ta.save
+
+      @ta.student.should == student
+      student.ta.should == @ta
+      authenticate @ta
+
+      get :show, { :board_id => @board.title, :id => @ta.id }
+
+      response.code.should == "200"
+
+      res = decode response.body
+
+      res['id'].should == @ta.id.to_s
+      res['username'].should == @ta.username
+      res['status'].should == @ta.status
+      res['student']['id'].should == @ta.student.id.to_s
+      res['student']['username'].should == @ta.student.username
+      res['student']['location'].should == @ta.student.location
+
+      student.destroy
+    end
+  end
+
+  describe "Errors" do
+    it "receives proper validation errors"
+  end
+
   describe "CRUD ta" do
     it "successfully creates a ta" do
       post :create, { :ta => @full_ta_hash, :queue_password => @board.password, :board_id => @board.title }
 
       response.code.should == "201"
 
-      res_hash = ActiveSupport::JSON.decode(response.body)
+      res_hash = decode response.body
 
       res_hash.count.should == 3
-
-      res_hash['username'].should == @full_ta_hash[:username]
-      res_hash['id'].should_not be_nil
-      res_hash['token'].should_not be_nil
 
       @full_ta_hash.merge!({ :id => res_hash['id'], :token => res_hash['token']})
     end
 
-    it "receives proper validation errors"
 
     it "fails to create a ta without proper password" do
       post :create, { :ta => @full_ta_hash, :password => "wrong_password", :board_id => @board.title }
@@ -50,17 +99,7 @@ describe TasController do
 
       res_hash = ActiveSupport::JSON.decode(response.body)
 
-      res_hash.count.should == 3
-
-      res_hash['username'].should == @full_ta_hash[:username]
-      res_hash['id'].should == @full_ta_hash[:id]
-      res_hash['student'].should be_nil
-    end
-
-    it "fails reading a ta w/o credentials" do
-      get :show, { :id => @full_ta_hash[:id], :board_id => @board.title }
-
-      response.code.should == "401"
+      res_hash.count.should == 4
     end
 
     it "successfully updates username" do
@@ -70,21 +109,10 @@ describe TasController do
 
       response.code.should == "200"
 
-      res_hash = ActiveSupport::JSON.decode(response.body)
-      res_hash.count.should == 3
+      res_hash = decode response.body 
+      res_hash.count.should == 4
 
       res_hash['username'].should == new_username
-    end
-
-    it "fails updating w/o credentials" do
-      put :update, { :student => { :in_queue => true}, :id => @full_ta_hash[:id], :board_id => @board.title }
-      response.code.should ==  "401"
-    end
-
-    it "fails destroying without authorization" do
-      delete :destroy, { :board_id => @board.title, :id => @full_ta_hash[:id] }
-
-      response.code.should == "401"
     end
 
     it "successfully destroys the student" do
@@ -95,6 +123,33 @@ describe TasController do
 
       QueueUser.where(:_id => @full_ta_hash[:id]).first.should be_nil
     end
+  end
+
+  describe "Authentication" do
+    before :each do
+      @ta = @board.tas.create!(Factory.attributes_for(:ta))
+    end
+
+    after :each do
+      @ta.destroy
+    end
+    it "fails updating w/o credentials" do
+      put :update, { :student => { :in_queue => true}, :id => @ta.id, :board_id => @board.title }
+      response.code.should ==  "401"
+    end
+
+    it "fails destroying without authorization" do
+      delete :destroy, { :board_id => @board.title, :id => @ta.id }
+
+      response.code.should == "401"
+    end
+
+    it "fails reading a ta w/o credentials" do
+      get :show, { :id => @ta.id, :board_id => @board.title }
+
+      response.code.should == "401"
+    end
+
   end
 end
 

@@ -90,7 +90,6 @@ describe QueuesController do
       stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 1.second  ))
       order["1"] = stud.id.to_s
 
-
       get :show, { :board_id => @board.title }
 
       response.code.should == "200"
@@ -105,6 +104,7 @@ describe QueuesController do
       students.each_index do |i|
         students[i].id.to_s.should == order[i.to_s].to_s
       end
+
     end
   end
 
