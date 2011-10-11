@@ -7,8 +7,8 @@ describe StudentsController do
   end
 
   it "fails when student tries to change another student's state" do
-    @student_1 = Factory.create :student
-    @student_2 = Factory.create :student
+    @student_1 = @board.students.create!(Factory.attributes_for(:student))
+    @student_2 = @board.students.create!(Factory.attributes_for(:student))
     authenticate @student_2
 
     put :update, { :student => { :username => "it doesn't matter cause this should fail" }, :board_id => @board.title, :id => @student_1.id.to_s }
