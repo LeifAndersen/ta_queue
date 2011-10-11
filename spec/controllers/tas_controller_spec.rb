@@ -69,6 +69,9 @@ describe TasController do
   end
 
   describe "Errors" do
+    before :each do
+      @ta = @board.tas.create!(Factory.attributes_for(:ta))
+    end
     it "create" do
       post :create, { :board_id => @board.title, :ta => { :username => " ", :password => " " } }
 
@@ -76,8 +79,35 @@ describe TasController do
 
       res = decode response.body
 
+      res.count.should == 2
+
       res['username'].should_not be_nil
       res['password'].should_not be_nil
+    end
+
+    it "create with invalid password" do
+      post :create, { :board_id => @board.title, :ta => { :username => "blah", :password => "blah" } }
+
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res.count.should == 1
+
+      res['password'].should_not be_nil
+    end
+
+    it "update" do
+      authenticate @ta
+      put :update, { :board_id => @board.title, :id => @ta.id.to_s, :ta => { :username => ""} }
+
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res.count.should == 1
+
+      res['username'].should_not be_nil
     end
   end
 
@@ -120,9 +150,7 @@ describe TasController do
       response.code.should == "200"
 
       res_hash = decode response.body 
-      res_hash.count.should == 4
-
-      res_hash['username'].should == new_username
+      res_hash.count.should == 0
     end
 
     it "successfully destroys the student" do
