@@ -27,21 +27,9 @@ class TasController < ApplicationController
 
   def update
     @ta.update_attributes(params[:ta])
-    if params[:accept_student] != nil
-      unless @ta.student.nil?
-        student = @ta.student
-        student.in_queue = false
-        student.ta = nil
-        student.save
-        @ta.save
-      end
-      @ta.student = @board.students.where(:_id => params[:accept_student]).first
-    end
-    @ta.save
 
-    respond_with do |f|
-      f.json { render :json => @ta }
-    end
+    @ta.save
+    respond_with @ta
   end
 
   def destroy
