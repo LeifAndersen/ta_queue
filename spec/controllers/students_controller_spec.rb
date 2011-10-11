@@ -57,7 +57,19 @@ describe StudentsController do
       res['username'].should_not be_nil
     end
     
-
+    it "username is unique" do
+      student_1 = Factory.attributes_for :student
+      student_2 = Factory.attributes_for :student
+      student_1[:username] = "doesn't matter"
+      student_2[:username] = "doesn't matter"
+      
+      post :create, { :student => student_1, :board_id => @board.title }
+      post :create, { :student => student_2, :board_id => @board.title }
+      
+      raise response.body
+      response.code.should == "201"
+    end
+    
     it "successfully reads a student" do
       authenticate QueueUser.where(:_id => @full_student_hash[:id]).first
       get :show, { :id => @full_student_hash[:id], :board_id => @board.title }
@@ -103,8 +115,16 @@ describe StudentsController do
   describe "API content" do
     
     it "returns proper average-case in JSON"
+    
+    it "returns a list of students" do
+      get :index, { :board_id => @board.id }
+      
+      response.code.should == "200"
 
-    it "orders students in the order they join the queue"
+      res = decode response.body
+
+      res.count.should == @board.students.count
+    end
 
   end
 
