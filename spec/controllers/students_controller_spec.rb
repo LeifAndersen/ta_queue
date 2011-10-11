@@ -46,9 +46,15 @@ describe StudentsController do
     end
 
     it "receives proper validation errors" do
-    	post :create, { :student => @full_student_hash, :username => "", :board_id => @board.title }
+      student = Factory.attributes_for :student
+      student[:username] = ""
+    	post :create, { :student => student, :board_id => @board.title }
     	
     	response.code.should == "422"
+
+      res = decode response.body
+
+      res['username'].should_not be_nil
     end
     
 
