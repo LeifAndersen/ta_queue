@@ -11,7 +11,7 @@ describe StudentsController do
     @student_2 = Factory.create :student
     authenticate @student_2
 
-    put :update, { :student => { :username => “it doesn’t matter cause this should fail” }, :board_id => @board.title, :id => @student_1.id.to_s }
+    put :update, { :student => { :username => "it doesn't matter cause this should fail" }, :board_id => @board.title, :id => @student_1.id.to_s }
 
     response.code.should == "401"
   end
@@ -46,7 +46,7 @@ describe StudentsController do
     end
 
     it "receives proper validation errors" do
-    	post :create { :student => @full_student_hash, :username => "", :board_id => @board.title }
+    	post :create, { :student => @full_student_hash, :username => "", :board_id => @board.title }
     	
     	response.code.should == "422"
     end
