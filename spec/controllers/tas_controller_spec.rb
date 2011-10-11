@@ -17,6 +17,7 @@ describe TasController do
       #@full_student = Student.create!(:username => "Bob", :token => SecureRandom.uuid, :location => "some_place")
       set_api_headers
     end
+
   describe "API" do
     before :each do
       @ta = @board.tas.create!(Factory.attributes_for(:ta))
@@ -68,8 +69,15 @@ describe TasController do
   end
 
   describe "Errors" do
-    it "receives proper validation errors" do
+    it "create" do
+      post :create, { :board_id => @board.title, :ta => { :username => " ", :password => " " } }
 
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res['username'].should_not be_nil
+      res['password'].should_not be_nil
     end
   end
 

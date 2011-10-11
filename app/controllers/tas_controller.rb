@@ -10,16 +10,7 @@ class TasController < ApplicationController
   end
 
   def create 
-=begin
-    if params[:queue_password] != @board.password
-      respond_with do |f|
-        f.json { render :json => { :error => "Invalid password" }, :status => :unauthorized }
-      end
-      return
-    end
-=end
     @ta = @board.tas.new(params[:ta].merge( :password => params[:queue_password]))
-
     respond_with do |f|
       if @ta.save
         session['user_id'] = @ta.id if request.format == 'html'
