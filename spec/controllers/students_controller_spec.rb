@@ -6,7 +6,15 @@ describe StudentsController do
     set_api_headers
   end
 
-  it "fails when student tries to change another student's state"
+  it "fails when student tries to change another student's state" do
+    @student_1 = Factory.create :student
+    @student_2 = Factory.create :student
+    authenticate @student_2
+
+    put :update, { :student => { :username => “it doesn’t matter cause this should fail” }, :board_id => @board.title, :id => @student_1.id.to_s }
+
+    response.code.should == "401"
+  end
 
     before :all do
       Board.destroy_all
@@ -37,7 +45,12 @@ describe StudentsController do
       @full_student_hash.merge!({ :id => res_hash['id'], :token => res_hash['token']})
     end
 
-    it "receives proper validation errors"
+    it "receives proper validation errors" do
+    	post :create { :student => @full_student_hash, :username => "", :board_id => @board.title }
+    	
+    	response.code.should == "422"
+    end
+    
 
     it "successfully reads a student" do
       authenticate QueueUser.where(:_id => @full_student_hash[:id]).first
