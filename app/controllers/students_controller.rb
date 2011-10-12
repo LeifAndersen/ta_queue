@@ -2,10 +2,10 @@ class StudentsController < ApplicationController
   before_filter :get_board
   before_filter :get_student, :except => [:index, :new, :create]
   before_filter :authenticate_current_student_or_ta!, :except => [:create, :ta_accept, :index]
-  before_filter :authenticate_ta!, :only => [:ta_accept]
+  before_filter :authenticate_ta!, :only => [:ta_accept, :ta_remove]
   before_filter :authenticate!, :only => [:index]
 
-  respond_to :json, :xml
+  respond_to :json
   respond_to :html, :only => [:create, :update]
 
   def show
@@ -54,7 +54,12 @@ class StudentsController < ApplicationController
 
   def ta_accept
     current_user.accept_student! @student
-    respond_with @board, :include => [:students, :tas]
+    respond_with @student
+  end
+
+  def ta_remove
+    @student.exit_queue!
+    respond_with @student
   end
 
 ###### PRIVATE ######
