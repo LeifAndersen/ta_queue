@@ -6,7 +6,6 @@ class QueueUser
   field :location, type: String
 
   validates :username, :token, :presence => true
-  validates :username, :uniqueness => true
 
   def as_json options = {}
     output_hash

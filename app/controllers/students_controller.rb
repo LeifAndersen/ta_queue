@@ -1,8 +1,9 @@
 class StudentsController < ApplicationController
   before_filter :get_board
   before_filter :get_student, :except => [:index, :new, :create]
-  before_filter :authenticate_current_student_or_ta!, :except => [:create, :ta_accept]
+  before_filter :authenticate_current_student_or_ta!, :except => [:create, :ta_accept, :index]
   before_filter :authenticate_ta!, :only => [:ta_accept]
+  before_filter :authenticate!, :only => [:index]
 
   respond_to :json, :xml
   respond_to :html, :only => [:create, :update]
@@ -30,6 +31,10 @@ class StudentsController < ApplicationController
         f.xml  { render :xml  => @student.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def index
+    respond_with @board.students
   end
 
   def update

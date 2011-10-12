@@ -132,7 +132,6 @@ describe BoardsController do
   end
 
   describe "CRUD" do
-
     before :each do
       @ta = @board.tas.create!(Factory.attributes_for :ta)
     end
@@ -158,7 +157,6 @@ describe BoardsController do
       @board = Board.find(@board.id)
       @board.active.should == false
     end
-
   end
 
   describe "authentication" do
@@ -218,7 +216,7 @@ describe BoardsController do
       response.code.should == "200"
     end
 
-    it "update should succeed with ta authentication" do
+    it "update should fail without ta authentication" do
       put :update, { :id => @board_auth.title, :board => { :active => true } }
 
       response.code.should == "401"

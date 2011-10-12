@@ -7,6 +7,7 @@ class Ta < QueueUser
   attr_accessor :password
 
   validate :check_password, :on => :create
+  validates :username, :uniqueness => true
 
   def output_hash
     hash = {}

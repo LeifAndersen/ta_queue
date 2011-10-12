@@ -6,8 +6,10 @@ class Student < QueueUser
 
   validates :location, :presence => true
 
-  scope :in_queue, where(:in_queue.ne => nil, :ta_id => nil).asc(:in_queue)
+  validate :check_username_location, :on => :create
 
+  scope :in_queue, where(:in_queue.ne => nil, :ta_id => nil).asc(:in_queue)
+  
   def output_hash
     hash = {}
     hash[:id] = id.to_s
@@ -41,5 +43,13 @@ class Student < QueueUser
     exit_queue
     save
   end
+
+  private
+
+    def check_username_location
+      if Student.where(:username => self.username, :location => self.location).first
+        self.errors["username"] = "This username and location are already logged in. Are you already logged in somewhere else?"
+      end
+    end
 
 end

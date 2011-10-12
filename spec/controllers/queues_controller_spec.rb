@@ -39,6 +39,7 @@ describe QueuesController do
     end
 
     it "show" do
+      authenticate @ta
       3.times do
         @board.tas.create!(Factory.attributes_for(:ta))
       end
@@ -89,6 +90,8 @@ describe QueuesController do
       order["5"] = stud.id.to_s
       stud = @board.students.create!(Factory.attributes_for(:student).merge( :in_queue => time + 1.second  ))
       order["1"] = stud.id.to_s
+
+      authenticate stud
 
       get :show, { :board_id => @board.title }
 
@@ -173,6 +176,65 @@ describe QueuesController do
       res['error'].should_not be_nil
       @student = Student.find(@student.id)
       @student.in_queue.should == nil
+    end
+  end
+
+  describe "authentication" do
+    it "show should pass with ta authentication" do
+      authenticate @ta
+
+      get :show, { :board_id => @board.title }
+
+      response.code.should == "200"
+    end
+
+    it "show should pass with student authentication" do
+      authenticate @student
+
+      get :show, { :board_id => @board.title }
+
+      response.code.should == "200"
+    end
+
+    it "show should fail on no authentication" do
+      get :show, { :board_id => @board.title }
+
+      response.code.should == "401"
+    end
+
+    it "update should succeed on ta authentication" do
+      authenticate @ta
+      @queue.frozen.should == false
+      put :update, { :board_id => @board.title, :queue => { :frozen => true } }
+
+      response.code.should == "200"
+
+      @board = Board.find(@board.id)
+
+      @board.queue.frozen.should == true
+    end
+
+    it "update should fail on student authentication" do
+      authenticate @student
+      @queue.frozen.should == false
+      put :update, { :board_id => @board.title, :queue => { :frozen => true } }
+
+      response.code.should == "401"
+
+      @board = Board.find(@board.id)
+
+      @board.queue.frozen.should == false
+    end
+
+    it "update should fail on no authentication" do
+      @queue.frozen.should == false
+      put :update, { :board_id => @board.title, :queue => { :frozen => true } }
+
+      response.code.should == "401"
+
+      @board = Board.find(@board.id)
+
+      @board.queue.frozen.should == false
     end
   end
 end

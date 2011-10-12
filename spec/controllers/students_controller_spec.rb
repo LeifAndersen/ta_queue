@@ -19,7 +19,7 @@ describe StudentsController do
     before :all do
       Board.destroy_all
       Student.destroy_all 
-      @board = Factory :board
+      @board = Factory.create :board
       @full_student_hash = Factory.attributes_for :student
     end
 
@@ -57,17 +57,38 @@ describe StudentsController do
       res['username'].should_not be_nil
     end
     
-    it "username is unique" do
+    it "allows same username with different location" do
       student_1 = Factory.attributes_for :student
       student_2 = Factory.attributes_for :student
       student_1[:username] = "doesn't matter"
       student_2[:username] = "doesn't matter"
       
       post :create, { :student => student_1, :board_id => @board.title }
-      post :create, { :student => student_2, :board_id => @board.title }
-      
-      raise response.body
+
       response.code.should == "201"
+
+      post :create, { :student => student_2, :board_id => @board.title }
+
+      response.code.should == "201"
+    end
+
+    it "fails with same username and location" do
+      student_1 = Factory.attributes_for :student
+      student_2 = Factory.attributes_for :student
+      student_2[:username] = student_1[:username]
+      student_2[:location] = student_1[:location]
+      
+      post :create, { :student => student_1, :board_id => @board.title }
+
+      response.code.should == "201"
+
+      post :create, { :student => student_2, :board_id => @board.title }
+
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res["username"].should_not be_nil
     end
     
     it "successfully reads a student" do
@@ -112,18 +133,40 @@ describe StudentsController do
     end
   end
 
-  describe "API content" do
+  describe "API" do
     
-    it "returns proper average-case in JSON"
-    
-    it "returns a list of students" do
-      get :index, { :board_id => @board.id }
+    it "index returns a list of students" do
+      5.times do
+        @board.students.create!(Factory.attributes_for(:student))
+      end
+
+      authenticate @board.students.first
+
+      get :index, { :board_id => @board.title }
       
       response.code.should == "200"
 
       res = decode response.body
 
       res.count.should == @board.students.count
+    end
+
+    it "show" do
+      student = @board.students.create!(Factory.attributes_for(:student))
+
+      authenticate student
+
+      get :show, { :board_id => @board.title, :id => student.id.to_s }
+
+      response.code.should == "200"
+
+      res = decode response.body
+
+      res.count.should == 4
+      res['id'].should_not be_nil
+      res['username'].should_not be_nil
+      res['location'].should_not be_nil
+      res['in_queue'].should_not be_nil
     end
 
   end

@@ -9,12 +9,23 @@ class ApplicationController < ActionController::Base
       @current_user
     end
 
+    # Simply grabs the user using the HTTP Credentials, does NOT redirect due to multiple redirects
+    # being called if it happens here
     def authorize!
       if request.format != "html"
         @current_user ||= authenticate_with_http_basic do |u, p| logger.debug "CREDENTIALS: " + u.to_s + " " + p.to_s; QueueUser.where(:_id => u, :token => p).first end
 
       else
         @current_user ||= QueueUser.where(:_id => session['user_id']).first
+      end
+    end
+
+    def authenticate!
+      authorize!
+      if current_user.nil?
+        respond_with do |f|
+          f.json { render :json => { :error => "You are not authorized to perform this action" }, :status => :unauthorized }
+        end
       end
     end
 
@@ -57,7 +68,7 @@ class ApplicationController < ActionController::Base
         unless current_user and current_user.ta? and QueueUser.where(:_id => params[:id]).first == current_user
           send_head_with :unauthorized and return
         end
-      else        
+      else
         unless current_user and current_user.ta?
           send_head_with :unauthorized and return
         end
