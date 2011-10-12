@@ -33,8 +33,8 @@
             #inner_list
             #list_buttons
               - if @current_user.ta?
-                %input{ :type => "button", :value => "Freeze" }
-                %input{ :id => "activate_queue", :type => "button", :value => "Activate" }
+                %input{ :id => "freeze_queue", :type => "button", :value => (@board.frozen? ? "Unfreeze" : "Freeze") }
+                %input{ :id => "activate_queue", :type => "button", :value => (@board.active? ? "Deactivate" : "Activate") }
               - else
                 %input{ :id => "enter_queue_button", :type => "button", :value => "Enter Queue" }
                 %input{ :id => "exit_queue_button", :type => "button", :value => "Exit Queue" }

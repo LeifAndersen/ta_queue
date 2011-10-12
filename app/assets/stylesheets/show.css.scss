@@ -1,0 +1,141 @@
+/*
+ * Styles for show.html.haml
+ *
+ */
+
+/* Placement of chalk board */
+.chalkboard
+{
+  margin-top: 15px;
+  margin-right: 40px;
+  float: right;
+  -moz-box-shadow: 0px 0px 100px 0px #000;
+  box-shadow: 0px 0px 100px 0px #000;
+  -webkit-box-shadow:  0px 0px 100px 0px #000;
+}
+
+/* Tab bar styles */
+#left_tab_bar
+{
+  position: absolute;
+  top: 38px;
+  -webkit-transform: rotate(-90deg); 
+  -moz-transform: rotate(-90deg);
+}
+
+#queue_tab
+{
+  position: absolute;
+  top: -22px;
+  left: -114px;
+  color: #aa6622;
+  text-shadow: 1px 1px 1px #eeee88;
+}
+
+.content_tab
+{
+  padding: 5px 5px 1px 5px;  
+  font-family: ta_queue; 
+  height: 16px;
+}
+
+#queue_tab .content_tab
+{
+  
+  position: absolute;
+  left: 29px;
+  background: url('/assets/h_wood.jpg') 0px 0px repeat-x;
+}
+
+.bottom_tab, .top_tab
+{
+  width: 30px;
+  height: 22px;
+}
+
+#queue_tab .bottom_tab
+{
+  position: absolute;
+  left: 0px;
+  background: url('/assets/htab_left.png') 0px 0px no-repeat;
+}
+
+#queue_tab  .top_tab
+{
+  position: absolute;
+  left: 91px;
+  background: url('/assets/htab_right.png') 0px 0px no-repeat;
+}
+
+.border_container
+{
+  position: absolute;
+  top: 38px;
+}
+
+.borders
+{
+  position: absolute;
+  top: 0px;
+  width: 15px;
+  height: 498px;
+  border-top: 1px;
+  border-top-style: solid;
+  border-top-color: #aa6622;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #aa6622; 
+}
+
+#cork_board
+{
+  width: 300px;
+  height: 500px;
+  background-color: red;
+}
+
+/* 
+Div that sizes mm in the table so that the table width/height is formatted
+properly in Chrome 
+ */
+#panes 
+{
+  background: url('/assets/show_chalk_dust.jpg') top left repeat;
+  height: 410px;
+  width: 550px;
+  padding: 20px 0px;
+}
+
+/* Status bar styles */
+#status_bar
+{
+  position: relative;
+  width: 100%;
+  height: 49px;
+  background: #555 url('/assets/status_bar.png') top left repeat-x;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #111;
+  color: #efefef;
+  font-family: ta_queue;
+  text-shadow: 0px 0px 3px #000;
+}
+
+#notification
+{
+  padding-top: 15px;
+  padding-left: 10px;
+}
+
+#queue_list
+{
+  width: 300px;
+  margin: 0px auto 0px auto;
+}
+
+#queue_datetime
+{
+  width: 100%;
+  background-color: red;
+  padding: 10px 5px;
+}

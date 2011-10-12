@@ -77,8 +77,7 @@ $(document).ready(function()
   
   var q = new Queue();
   q.queryQueue();
-  q.setupQueue();
-  console.dir(q);
+  q.addEventListeners2Queue();
   
 	// Sets the interval for the browser to requery the database, and sets up
 	// the queue.
