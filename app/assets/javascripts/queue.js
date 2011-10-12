@@ -78,14 +78,17 @@ function query_queue()
 {
 	$.ajax({
 		type:"GET",
-		url:"/boards/" + $("#board_title").val(),
+		url:"/boards/" + $("#board_title").val() + "/queue",
 		dataType:"json",
-		success:queue_cb
+		success:queue_cb,
+		statusCode: {
+		  304:function () {alert('nothing new');}
+		}
 	});
 }
 
 // This method is responsible for updating queue data.
-function queue_cb(data)
+function queue_cb(data,textStatus,xhr)
 {
 	html = "";
 	html += '<ul id="queue">';

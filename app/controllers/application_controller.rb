@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
         unless current_user and current_user.ta? and QueueUser.where(:_id => params[:id]).first == current_user
           send_head_with :unauthorized and return
         end
-      else
+      else        
         unless current_user and current_user.ta?
           send_head_with :unauthorized and return
         end

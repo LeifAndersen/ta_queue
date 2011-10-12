@@ -14,16 +14,14 @@
   border: 0px;
 }
 
-.tl, .ml, .bl, .tr, .mr, .br
+.tl, .ml, .bl, .tr, .mr, .br, .fmm
 {
   width: 15px;
-  background-color: red;
 }
 
 .tl, .tm, .tr, .bl, .bm, .br
 {
   height: 15px;
-  background-color: red;
 }
 
 .tm, .bm
@@ -31,7 +29,7 @@
   background: url("/assets/h_wood.jpg") top left repeat-x;
 }
 
-.ml, .mr
+.ml, .mr, .fmm
 {
   background: url("/assets/v_wood.jpg") top left repeat-y;
 }
