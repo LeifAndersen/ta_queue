@@ -11,6 +11,14 @@
     %td{ :class => "ml" }
     %td{ :class => "mm" }
       #cork_board
+        #control_panel
+          - if @current_user.student?
+            %input{ :id => "enter_queue", :type => "button", :value => (@current_user.in_queue? ? "Exit Queue" : "Enter Queue") }
+            = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete
+          - else
+            %input{ :id => "activate_queue", :type => "button", :value => (@board.active? ? "Deactivate" : "Activate") }
+            %input{ :id => "freeze_queue", :type => "button", :value => (@board.frozen? ? "Unfreeze" : "Freeze") }
+            = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
         Logged in as 
         %b= @current_user.username
         = hidden_field_tag "board_title", @board.title
@@ -19,10 +27,7 @@
         = hidden_field_tag "is_ta", @current_user.ta?
         %br/
         %ul#ta_list
-        - if @current_user.student?
-          = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete
-        - else
-          = button_to "Sign out", board_ta_path(@board, @current_user), :method => :delete
+        
         - if @current_user.ta?
           %input{ :id => "accept_next_button", :type => "button", :value => "Accept Next" }
           
@@ -33,11 +38,9 @@
             #inner_list
             #list_buttons
               - if @current_user.ta?
-                %input{ :id => "freeze_queue", :type => "button", :value => (@board.frozen? ? "Unfreeze" : "Freeze") }
-                %input{ :id => "activate_queue", :type => "button", :value => (@board.active? ? "Deactivate" : "Activate") }
+                
               - else
-                %input{ :id => "enter_queue_button", :type => "button", :value => "Enter Queue" }
-                %input{ :id => "exit_queue_button", :type => "button", :value => "Exit Queue" }
+                
           #discussion
             #discussion_header
               Question Board

@@ -94,6 +94,16 @@
   background-color: red;
 }
 
+#control_panel
+{
+  width: 100%;
+  height: 49px;
+  background-color: yellow;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #111;
+}
+
 /* 
 Div that sizes mm in the table so that the table width/height is formatted
 properly in Chrome 

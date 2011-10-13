@@ -6,16 +6,7 @@
  */
  
 function Queue ()
-{
-  $.ajaxSetup(
-	{
-		headers: 
-		  { 
-		    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
-        'Authorization' : base64_encode(this.username + ":" + this.password)
-      }
-	});
-	
+{	
   this.username = $('#user_id').val();
   //$('#user_id').remove();
 
@@ -67,6 +58,20 @@ function Queue ()
   	    {
   	      freezeQueue(true);
   	      $(this).attr('value','Unfreeze');
+  	    }
+  	  });
+  	  
+  	  $('#enter_queue').click(function ()
+  	  {
+  	    if ($(this).attr('value') == 'Enter Queue')
+  	    {
+  	      $(this).attr('value','Exit Queue');
+  	      enterQueue();
+  	    }
+  	    else
+  	    {
+  	      $(this).attr('value','Enter Queue');
+  	      exitQueue();
   	    }
   	  });
   	}
@@ -122,7 +127,7 @@ function Queue ()
 	    this.updateStudents(data.students);
 	    this.updateTas(data.tas);
 	  }
-	  
+	  	  
 	}
 	
 	this.activateQueue = function (isActive)
@@ -153,7 +158,7 @@ function Queue ()
 	
 	this.activateQueueSuccess = function (data)
 	{
-	  alert('we changed it');
+	  
 	}
 	
 	this.freezeQueue = function (isFrozen)
@@ -186,6 +191,49 @@ function Queue ()
 	{
 	
 	}
+	
+	this.enterQueue = function ()
+	{
+  	with (this)
+  	{
+  	  $.ajax({
+    		  type : 'GET',
+    		  url : '/boards/' + boardTitle + '/queue/enter_queue',
+    		  headers : 
+    		  { 
+    		    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
+            'Authorization' : base64_encode(username + ":" + password)
+          },
+    		  dataType : 'json',
+    		  success : function (data) 
+    		  {
+    		    queryQueueSuccess(data);
+    		  }
+    	});
+    }
+	}
+  
+  this.exitQueue = function ()
+  {
+    with (this)
+  	{
+  	  $.ajax({
+    		  type : 'GET',
+    		  url : '/boards/' + boardTitle + '/queue/exit_queue',
+    		  headers : 
+    		  { 
+    		    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
+            'Authorization' : base64_encode(username + ":" + password)
+          },
+    		  dataType : 'json',
+    		  success : function (data) 
+    		  {
+    		    queryQueueSuccess(data);
+    		  }
+    	});
+    }
+  }
+  	
 	this.updateStudents = function (a)
 	{
 	  var html = '';
@@ -212,8 +260,8 @@ function Queue ()
 	      html += 'odd student">';
 	    }
 	    
-	    html += '<p class="username">' + studentsInQueue[i].username + '</p>';
-	    html += '<p class="location">' + studentsInQueue[i].location + '</p>';
+	    html += '<p class="username">' + this.studentsInQueue[i].username + '</p>';
+	    html += '<p class="location">' + this.studentsInQueue[i].location + '</p>';
 	    html += '</div>';
 	  }
 	  
