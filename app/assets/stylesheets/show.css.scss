@@ -18,24 +18,26 @@
 #left_tab_bar
 {
   position: absolute;
-  top: 38px;
-  -webkit-transform: rotate(-90deg); 
-  -moz-transform: rotate(-90deg);
+  top: 30px;
+  -webkit-transform: rotate(90deg); 
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
 }
 
 #queue_tab
 {
   position: absolute;
-  top: -22px;
-  left: -114px;
+  top: -37px;
+  left: 0px;
   color: #aa6622;
   text-shadow: 1px 1px 1px #eeee88;
 }
 
 .content_tab
 {
-  padding: 5px 5px 1px 5px;  
+  padding: 0px 5px 6px 5px;  
   font-family: ta_queue; 
+  font-size: 13pt;
   height: 16px;
 }
 
@@ -63,7 +65,7 @@
 #queue_tab  .top_tab
 {
   position: absolute;
-  left: 91px;
+  left: 78px;
   background: url('/assets/htab_right.png') 0px 0px no-repeat;
 }
 
@@ -94,26 +96,134 @@
   background-color: red;
 }
 
-#control_panel
+#control_panel, #tas_in_queue_header
 {
   width: 100%;
   height: 49px;
-  background-color: yellow;
+  background: #555 url('/assets/status_bar.png') top right repeat-x;
   border-bottom: 1px;
   border-bottom-style: solid;
   border-bottom-color: #111;
 }
 
-/* 
-Div that sizes mm in the table so that the table width/height is formatted
-properly in Chrome 
- */
-#panes 
+#control_bar
 {
-  background: url('/assets/show_chalk_dust.jpg') top left repeat;
-  height: 410px;
-  width: 550px;
-  padding: 20px 0px;
+  float: left;
+  margin-top: 12px;
+  padding: 0px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-box-shadow: 0px 0px 3px 0px #000;
+}
+
+#control_bar *
+{
+  float: left;
+}
+
+#enter_queue, #freeze_queue, #activate_queue, #sign_out
+{
+  font-family: ta_queue;
+  color: #efefef;
+  background: #111 url('/assets/status_bar.png') top right repeat-x;
+  border: 1px solid #000;
+  cursor: pointer;
+  -mox-box-shadow: 0px 0px 10px 0px #fff;
+  margin: 0px;
+  text-shadow: 0px 0px 3px #000;
+  font-size: 11pt;
+}
+
+#enter_queue:hover, #freeze_queue:hover, #activate_queue:hover, #sign_out:hover
+{
+  background-color: #333;
+}
+
+.sign_out_alone
+{
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.sign_out_with
+{
+  border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -webkit-border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+
+#freeze_queue
+{
+  border-right: none;
+}
+
+#enter_queue, #activate_queue
+{
+  border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-right: none;
+}
+
+#student_welcome
+{
+  height: 180px;
+  width: 100%;
+  overflow: auto;
+  background: url('/assets/chalk_dust.jpg') top right repeat;
+}
+
+#student_welcome .message
+{
+  font-size: 10pt;
+}
+
+#student_welcome .message span
+{
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.post_it
+{
+  background: url('/assets/post_it.png') top left no-repeat;
+  height: 140px;
+  width: 180px;
+  margin-left: 45px;
+  margin-top: 13px;
+  padding: 10px 20px 10px 14px;
+  font-family: chalk;
+  color: #3744ea;
+}
+
+#tas_in_queue_header
+{
+  color: #efefef;
+  font-family: ta_queue;
+  font-size: 13pt;
+} 
+
+#tas_in_queue_header div
+{
+  padding-top: 13px;
+  padding-left: 10px;
+}
+
+#tas_in_queue
+{
+  height: 220px;
+  width: 100%;
+  overflow: auto;
+  background: url('/assets/chalk_dust.jpg') top left repeat;
 }
 
 /* Status bar styles */
@@ -128,24 +238,104 @@ properly in Chrome
   border-bottom-color: #111;
   color: #efefef;
   font-family: ta_queue;
+  font-size: 13pt;
   text-shadow: 0px 0px 3px #000;
 }
 
 #notification
 {
-  padding-top: 15px;
+  padding-top: 13px;
   padding-left: 10px;
 }
 
+/* 
+Div that sizes mm in the table so that the table width/height is formatted
+properly in Chrome 
+ */
+#panes 
+{
+  background: url('/assets/chalk_dust.jpg') top left repeat;
+  height: 450px;
+  width: 550px;
+}
+
+#queue_panel
+{
+  height: 100%;
+  overflow: auto; 
+  padding-top: 20px; 
+}
+
+
 #queue_list
 {
+  -moz-box-shadow: 0px 0px 4px 0px #828282;
   width: 300px;
   margin: 0px auto 0px auto;
+  font-family: ta_queue;
+  color: #efefef;
+  text-shadow: 0px 0px 3px #000;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
 }
 
 #queue_datetime
 {
-  width: 100%;
-  background-color: red;
+  width: 290px;
+  background: #454545 url('/assets/queue_datetime.png') top left repeat-x;
   padding: 10px 5px;
+  border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+}
+
+.student
+{
+  position: relative;
+  width: 290px;
+  padding: 5px 5px;
+}
+
+.student .username
+{
+  font-size: 13pt;
+  margin: 0px;
+}
+
+.student .location
+{
+  font-size: 10pt;
+  margin: -5px 0px 0px 0px;
+}
+
+.student .accept
+{
+
+}
+
+.odd
+{
+  background-color: #333333;
+}
+
+.even
+{
+  background-color: #282828;
+}
+
+#queue_bottom
+{
+  width: 290px;
+  background: #454545 url('/assets/queue_bottom.png') top right repeat-x;
+  padding: 10px 5px;
+  border-bottom-left-radius: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  -webkit-border-bottom-right-radius: 10px;
 }

@@ -57,8 +57,9 @@
 
 .content_tab
 {
-  padding: 5px 5px 1px 5px;  
-  font-family: ta_queue; 
+  padding: 0px 5px 6px 5px;  
+  font-family: ta_queue;
+  font-size: 13pt;
   height: 16px;
 }
 
@@ -110,19 +111,20 @@
   border-bottom-color: #111;
   color: #efefef;
   font-family: ta_queue;
+  font-size: 13pt;
   text-shadow: 0px 0px 3px #000;
 }
 
 #class_title
 {
-  margin-top: 15px;
+  margin-top: 13px;
   margin-left: 10px;
 }
 
 /* Styles for the ta and student panels and their forms */
 #panes
 {
-  background: url('/assets/login_chalk_dust.jpg') top left no-repeat;
+  background: url('/assets/chalk_dust.jpg') top left repeat;
   padding: 10px;
   font-family: chalk;
   color: #fff;
@@ -179,6 +181,12 @@
 .submit
 {
   background: url('/assets/login_circle.png') -3px -7px no-repeat;
+}
+
+.errors
+{
+  margin-top: -30px;
+  color: red;
 }
 
 .login_hint

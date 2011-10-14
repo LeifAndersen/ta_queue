@@ -32,12 +32,7 @@
               %td= @board.active ? "Active" : "Inactive"
               %td= @board.students.in_queue.count
               %td= @board.tas.count
-        - if flash[:errors].present?
-          .errors
-            Errors:
-            %ul
-              - flash[:errors].each do |error|
-                %li= error
+        
                 
         #panes
           #student_panel
@@ -45,6 +40,12 @@
               = f.text_field :username, :value => "username"
               = f.text_field :location, :value => "location", :class => "login"
               = submit_tag "Login", :class => "submit right"
+            - if flash[:errors].present?
+              .errors
+                Errors:
+                %ul
+                  - flash[:errors].each do |error|
+                    %li= error
             %span{ :class => "login_hint" }
               To log in as a student, simply type in your name and computer location.  Each computer is marked with a label on top of the desktop.  If you are not sitting at a computer, please describe where you are so that the TAs can easily locate you.
           #ta_panel
@@ -52,6 +53,12 @@
               = f.text_field :username, :value => "username"
               = f.text_field :password, :value => "password", :name => "queue_password"
               = submit_tag "Login", :class => "submit right"
+            - if flash[:errors].present?
+              .errors
+                Errors:
+                %ul
+                  - flash[:errors].each do |error|
+                    %li= error
             %span{ :class => "login_hint" }
               Please log in with your name and the password the professor you TA for provided you.  
     %td{ :class => "mr" }

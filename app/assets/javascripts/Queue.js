@@ -127,7 +127,6 @@ function Queue ()
 	    this.updateStudents(data.students);
 	    this.updateTas(data.tas);
 	  }
-	  	  
 	}
 	
 	this.activateQueue = function (isActive)
@@ -236,6 +235,7 @@ function Queue ()
   	
 	this.updateStudents = function (a)
 	{
+	  var i;
 	  var html = '';
 	  this.studentsInQueue = a;	  
 	  $('#queue_list').html('');
@@ -247,9 +247,9 @@ function Queue ()
 	  
 	  this.updateDateTime();
 	  
-	  for (var i = 0; i < this.studentsInQueue.length; i++)
+	  for (i = 0; i < this.studentsInQueue.length; i++)
 	  {
-	    html += '<div id="_' + i + '" class="';
+	    html += '<div id="' + this.studentsInQueue[i].id + '" class="';
 	    
 	    if (i % 2 == 0)
 	    {
@@ -262,10 +262,35 @@ function Queue ()
 	    
 	    html += '<p class="username">' + this.studentsInQueue[i].username + '</p>';
 	    html += '<p class="location">' + this.studentsInQueue[i].location + '</p>';
+	    
+	    if (this.isTA == true)
+	    {
+	      html += '<input class="accept" type="button" value="Accept" />'; 
+	    }
+	    
 	    html += '</div>';
 	  }
 	  
+	  if (i % 2 == 0)
+    {
+      html += '<div id="queue_bottom" class="even"></div>';
+    }
+    else
+    {
+      html += '<div id="queue_bottom" class="odd"></div>';
+    }
+    
 	  $('#queue_list').append(html);
+	  $('.scroll-pane').jScrollPane();
+	}
+	
+	this.centerControlBar = function ()
+	{
+	  var parentWidth = $('#control_panel').innerWidth();
+	  var childWidth = $('#control_bar').innerWidth();
+	  var margin = (parentWidth - childWidth)/2 + 17;
+	  
+	  $('#control_bar').css('margin-left',margin + 'px');
 	}
 	
 	this.updateTas = function (a)
@@ -306,9 +331,9 @@ function Queue ()
     {
       timeString += hour + ':' + minute + ' pm';
     }
-    else if (hour == 24)
+    else if (hour == 0)
     {
-      hour = hour - 12;
+      hour = 12;
       timeString += hour + ':' + minute + ' am';
     }
     else if (hour > 12)

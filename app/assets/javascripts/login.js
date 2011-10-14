@@ -16,6 +16,10 @@ $(document).ready(function()
   $('#ta_username,#student_username').attr('value','username');
   $('#student_location').attr('value','location');
   
+  if (window.location.search == 'ta')
+  {
+    alert('gotcha');
+  }
 	// TA tab/panel and student tab/panel toggle
 	$('#student_tab, #ta_tab')
 	  .click(function ()
@@ -253,5 +257,16 @@ $(document).ready(function()
       }
     }
   );
+  
+  $('#new_ta').submit(function ()
+  {
+    alert('here');
+    window.location.search = 'ta=true';
+  });
+  
+  $('#new_student').submit(function ()
+  {
+    
+  });
   
 });
