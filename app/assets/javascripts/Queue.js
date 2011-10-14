@@ -74,12 +74,6 @@ function Queue ()
   	      exitQueue();
   	    }
   	  });
-  	  
-  	  $('.accept').click(function ()
-	    {
-	      var student_id = $(this).parent().attr('id');
-	      acceptStudent(student_id);
-	    });
   	}
 	}
 	
@@ -243,7 +237,7 @@ function Queue ()
 	{
 	  var i;
 	  var html = '';
-	  this.studentsInQueue = a;	  
+	   
 	  $('#queue_list').html('');
 	  
 	  if (this.active == false)
@@ -253,9 +247,9 @@ function Queue ()
 	  
 	  this.updateDateTime();
 	  
-	  for (i = 0; i < this.studentsInQueue.length; i++)
+	  for (i = 0; i < a.length; i++)
 	  {
-	    html += '<div id="' + this.studentsInQueue[i].id + '~~~~' + i + '" class="';
+	    html += '<div id="' + a[i].id + '~~~~' + i + '" class="';
 	    
 	    if (i % 2 == 0)
 	    {
@@ -266,10 +260,10 @@ function Queue ()
 	      html += 'odd student">';
 	    }
 	    
-	    html += '<p class="username">' + this.studentsInQueue[i].username + '</p>';
-	    html += '<p class="location">' + this.studentsInQueue[i].location + '</p>';
-
-	    if (this.isTA)
+	    html += '<p class="username">' + a[i].username + '</p>';
+	    html += '<p class="location">' + a[i].location + '</p>';
+  
+	    if (this.isTA == 'true')
 	    {
 	      html += '<input type="button" class="accept" value="Accept"/>';
 	    }
@@ -288,7 +282,14 @@ function Queue ()
     
 	  $('#queue_list').append(html);
 	  $('.scroll-pane').jScrollPane();
-	  this.addEventListeners2Queue();
+	  with (this)
+	  {
+  	  $('.accept').click(function ()
+      {
+        var student_id = $(this).parent().attr('id');
+        acceptStudent(student_id);
+      });
+    }
 	}
 	
 	this.acceptStudent = function (sid)
@@ -328,10 +329,15 @@ function Queue ()
   		  dataType : 'json',
   		  success : function (data) 
   		  {
-  		    queryQueueSuccess(data);
+  		    removeStudentSuccess(data);
   		  }
     	});
     }
+	}
+	
+	this.removeStudentSuccess = function (data)
+	{
+	  this.queryQueue();
 	}
 	
 	this.centerControlBar = function ()
@@ -349,36 +355,34 @@ function Queue ()
 	  
 	  $('#tas_list').html(html);
 	  
-	  this.tasInQueue = a;
-	  
-	  for (var i = 0; i < this.tasInQueue.length; i++)
+	  for (var i = 0; i < a.length; i++)
 	  {
 	    html += '<div class="post_it">';
 	    
-	    html += '<div class="ta_name">' + this.tasInQueue[i].username + '</div>';
+	    html += '<div class="ta_name">' + a[i].username + '</div>';
 	    
 	    html += '<div class="student_info">';
 	    
-	    if (this.tasInQueue[i].student == null)
+	    if (a[i].student == null)
 	    {
 	      html += 'Current Student: none';
 	    }
 	    else
 	    {
-	      html += 'Currently with ' + this.tasInQueue[i].student.username;
-	      html += ' at ' + this.tasInQueue[i].student.location;
+	      html += 'Currently with ' + a[i].student.username;
+	      html += ' at ' + a[i].student.location;
 	    }
 	    
 	    html += '</div>';
 	    html += '<div class="ta_status">Status: '
 	    
-	    if (this.tasInQueue[i].status == '')
+	    if (a[i].status == '')
 	    {
 	      html += 'None';
 	    }
 	    else
 	    {
-	      html += this.tasInQueue[i].status;
+	      html += a[i].status;
 	    }
 	    
 	    html += '</div>';
@@ -388,7 +392,7 @@ function Queue ()
 	  
 	  $('#tas_list').append(html);
 	  $('.scroll-pane').jScrollPane();
-	  this.addEventListeners2Queue();
+	
 	}
 	
 	this.getDate = function ()
