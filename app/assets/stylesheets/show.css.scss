@@ -93,7 +93,6 @@
 {
   width: 300px;
   height: 500px;
-  background-color: red;
 }
 
 #control_panel, #tas_in_queue_header
@@ -114,7 +113,9 @@
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 3px 0px #000; 
   -moz-box-shadow: 0px 0px 3px 0px #000;
+  -webkit-box-shadow: 0px 0px 3px 0px #000;
 }
 
 #control_bar *
@@ -129,7 +130,6 @@
   background: #111 url('/assets/status_bar.png') top right repeat-x;
   border: 1px solid #000;
   cursor: pointer;
-  -mox-box-shadow: 0px 0px 10px 0px #fff;
   margin: 0px;
   text-shadow: 0px 0px 3px #000;
   font-size: 11pt;
@@ -210,6 +210,7 @@
   color: #efefef;
   font-family: ta_queue;
   font-size: 13pt;
+  text-shadow: 0px 0px 3px #000;
 } 
 
 #tas_in_queue_header div
@@ -224,6 +225,18 @@
   width: 100%;
   overflow: auto;
   background: url('/assets/chalk_dust.jpg') top left repeat;
+}
+
+.ta_name
+{
+  font-weight: bold;
+}
+
+.student_info,.ta_status
+{
+  font-size: 10pt;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /* Status bar styles */
@@ -269,7 +282,9 @@ properly in Chrome
 
 #queue_list
 {
+  box-shadow: 0px 0px 4px 0px #828282;
   -moz-box-shadow: 0px 0px 4px 0px #828282;
+  -webkit-box-shadow: 0px 0px 4px 0px #828282;
   width: 300px;
   margin: 0px auto 0px auto;
   font-family: ta_queue;
@@ -314,7 +329,25 @@ properly in Chrome
 
 .student .accept
 {
+  position: absolute;
+  right: 30px;
+  top: 12px;
+  font-family: ta_queue;
+  color: #efefef;
+  background: #111 url('/assets/status_bar.png') top right repeat-x;
+  border: 1px solid #000;
+  cursor: pointer;
+  margin: 0px;
+  text-shadow: 0px 0px 3px #000;
+  font-size: 11pt;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
 
+.student .accept:hover
+{
+  background-color: #333;
 }
 
 .odd

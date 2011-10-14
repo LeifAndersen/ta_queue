@@ -79,7 +79,6 @@ $(document).ready(function()
   q.queryQueue();
   q.addEventListeners2Queue();
   q.centerControlBar();
-  $('.scroll-pane').jScrollPane();
 	// Sets the interval for the browser to requery the database, and sets up
 	// the queue.
 	//set_interval(3000);

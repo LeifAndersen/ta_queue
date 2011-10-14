@@ -74,6 +74,12 @@ function Queue ()
   	      exitQueue();
   	    }
   	  });
+  	  
+  	  $('.accept').click(function ()
+	    {
+	      var student_id = $(this).parent().attr('id');
+	      acceptStudent(student_id);
+	    });
   	}
 	}
 	
@@ -249,7 +255,7 @@ function Queue ()
 	  
 	  for (i = 0; i < this.studentsInQueue.length; i++)
 	  {
-	    html += '<div id="' + this.studentsInQueue[i].id + '" class="';
+	    html += '<div id="' + this.studentsInQueue[i].id + '~~~~' + i + '" class="';
 	    
 	    if (i % 2 == 0)
 	    {
@@ -262,10 +268,10 @@ function Queue ()
 	    
 	    html += '<p class="username">' + this.studentsInQueue[i].username + '</p>';
 	    html += '<p class="location">' + this.studentsInQueue[i].location + '</p>';
-	    
-	    if (this.isTA == true)
+
+	    if (this.isTA)
 	    {
-	      html += '<input class="accept" type="button" value="Accept" />'; 
+	      html += '<input type="button" class="accept" value="Accept"/>';
 	    }
 	    
 	    html += '</div>';
@@ -282,6 +288,50 @@ function Queue ()
     
 	  $('#queue_list').append(html);
 	  $('.scroll-pane').jScrollPane();
+	  this.addEventListeners2Queue();
+	}
+	
+	this.acceptStudent = function (sid)
+	{
+	    
+    with (this)
+  	{
+  	  $.ajax({
+    		  type : 'GET',
+    		  url : '/boards/' + boardTitle + '/students/' + sid.split('~~~~')[0] + '/ta_accept',
+    		  headers : 
+    		  { 
+    		    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
+            'Authorization' : base64_encode(username + ":" + password)
+          },
+    		  dataType : 'json',
+    		  success : function (data) 
+    		  {
+    		    removeStudent(data,sid);
+    		  }
+    	});
+    }
+	}
+	
+	this.removeStudent = function (data,sid)
+	{
+	  with (this)
+  	{
+      $.ajax({
+  		  type : 'GET',
+  		  url : '/boards/' + boardTitle + '/students/' + sid.split('~~~~')[0] + '/ta_remove',
+  		  headers : 
+  		  { 
+  		    'X-CSRF-Token' : $('meta[name="csrf-token"]').attr('content'),
+          'Authorization' : base64_encode(username + ":" + password)
+        },
+  		  dataType : 'json',
+  		  success : function (data) 
+  		  {
+  		    queryQueueSuccess(data);
+  		  }
+    	});
+    }
 	}
 	
 	this.centerControlBar = function ()
@@ -295,12 +345,50 @@ function Queue ()
 	
 	this.updateTas = function (a)
 	{
+	  var html = '';
+	  
+	  $('#tas_list').html(html);
+	  
 	  this.tasInQueue = a;
 	  
 	  for (var i = 0; i < this.tasInQueue.length; i++)
 	  {
-	  
+	    html += '<div class="post_it">';
+	    
+	    html += '<div class="ta_name">' + this.tasInQueue[i].username + '</div>';
+	    
+	    html += '<div class="student_info">';
+	    
+	    if (this.tasInQueue[i].student == null)
+	    {
+	      html += 'Current Student: none';
+	    }
+	    else
+	    {
+	      html += 'Currently with ' + this.tasInQueue[i].student.username;
+	      html += ' at ' + this.tasInQueue[i].student.location;
+	    }
+	    
+	    html += '</div>';
+	    html += '<div class="ta_status">Status: '
+	    
+	    if (this.tasInQueue[i].status == '')
+	    {
+	      html += 'None';
+	    }
+	    else
+	    {
+	      html += this.tasInQueue[i].status;
+	    }
+	    
+	    html += '</div>';
+	    
+	    html += '</div>';
 	  }
+	  
+	  $('#tas_list').append(html);
+	  $('.scroll-pane').jScrollPane();
+	  this.addEventListeners2Queue();
 	}
 	
 	this.getDate = function ()
