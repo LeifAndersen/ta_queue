@@ -51,7 +51,7 @@
           #ta_panel
             = form_for [@board, @ta] do |f|
               = f.text_field :username, :value => "username"
-              = f.text_field :password, :value => "password", :name => "queue_password"
+              = f.text_field :password, :value => "password", :name => "queue_password", :autocomplete => "off"
               = submit_tag "Login", :class => "submit right"
             - if flash[:errors].present? && params[:ta] == "true"
               .errors
