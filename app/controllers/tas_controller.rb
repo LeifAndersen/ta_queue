@@ -18,7 +18,7 @@ class TasController < ApplicationController
         f.json { render :json => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
         f.xml  { render :xml => { token: @ta.token, id: @ta.id, username: @ta.username }, :status => :created }
       else
-        f.html { flash[:errors] = @ta.errors.full_messages; redirect_to board_login_path @board }
+        f.html { flash[:errors] = @ta.errors.full_messages; redirect_to board_login_path(@board, :ta => true) }
         f.json { render :json => @ta.errors, :status => :unprocessable_entity }
         f.json { render :xml => @ta.errors, :status => :unprocessable_entity }
       end

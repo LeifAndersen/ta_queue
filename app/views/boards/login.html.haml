@@ -40,7 +40,7 @@
               = f.text_field :username, :value => "username"
               = f.text_field :location, :value => "location", :class => "login"
               = submit_tag "Login", :class => "submit right"
-            - if flash[:errors].present?
+            - if flash[:errors].present? && params[:student] == "true"
               .errors
                 Errors:
                 %ul
@@ -53,7 +53,7 @@
               = f.text_field :username, :value => "username"
               = f.text_field :password, :value => "password", :name => "queue_password"
               = submit_tag "Login", :class => "submit right"
-            - if flash[:errors].present?
+            - if flash[:errors].present? && params[:ta] == "true"
               .errors
                 Errors:
                 %ul

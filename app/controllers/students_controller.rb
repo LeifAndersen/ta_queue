@@ -26,7 +26,7 @@ class StudentsController < ApplicationController
         f.xml  { render :xml => { token: @student.token, id: @student.id, username: @student.username }, :status => :created }
       else
         flash[:errors] = @student.errors.full_messages
-        f.html { redirect_to board_login_path @board }
+        f.html { redirect_to board_login_path(@board, :student => true) }
         f.json { render :json => @student.errors, :status => :unprocessable_entity }
         f.xml  { render :xml  => @student.errors, :status => :unprocessable_entity }
       end
