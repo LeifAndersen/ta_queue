@@ -24,9 +24,9 @@ class Ta < QueueUser
 
   def accept_student stud
     unless self.student.nil?
-      temp = self.student
-      temp.ta = nil
-      temp.save
+      prev_student = self.student
+      prev_student.ta = nil
+      prev_student.save
       self.save
     end
       self.student = stud

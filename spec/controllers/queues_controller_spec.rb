@@ -52,6 +52,10 @@ describe QueuesController do
         @board.students.create!(Factory.attributes_for(:student).merge!( :in_queue => DateTime.now ))
       end
 
+      ta = @board.tas.first
+
+      ta.accept_student! @board.students.first
+
       get :show, { :board_id => @board.title }
 
       response.code.should == "200"
@@ -68,6 +72,8 @@ describe QueuesController do
 
       res_hash['students'].count.should == 7
       res_hash['tas'].count.should == 4 # the extra is due to the ta created in the before :each block
+
+      res_hash['tas'][0]['student']['id'].should == @board.students.first.id.to_s
     end
 
     it "students should come back in the order they joined the queue" do

@@ -250,7 +250,6 @@ describe StudentsController do
       @student.ta.id.should == @ta.id
     end
 
-
     it "should properly detach the current student when accepting a new student" do
       authenticate @ta
 
@@ -264,8 +263,10 @@ describe StudentsController do
       response.code.should == "200"
 
       @ta = Ta.find(@ta.id)
+      @ta.student.should == @second_student
 
-      @ta.student.id.should == @second_student.id
+      @student = Student.find(@student.id)
+      @student.ta.should be_nil
     end
 
     it "ta_remove should properly remove a student from the queue" do
