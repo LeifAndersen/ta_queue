@@ -4,6 +4,7 @@ class QueueUser
   field :username, type: String
   field :token, type: String, default: -> { SecureRandom.uuid }
   field :location, type: String
+  field :alive_time, type: DateTime
 
   validates :username, :token, :presence => true
 

@@ -8,6 +8,7 @@ gem 'execjs'
 gem 'haml'
 gem 'therubyracer'
 gem 'cover_me', :group => :test
+gem 'crom', :git => 'http://github.com/kgiszczak/crom'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'

@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
       else
         @current_user ||= QueueUser.where(:_id => session['user_id']).first
       end
+
+      if @current_user
+        keep_alive @current_user
+      end
     end
 
     def authenticate!
@@ -80,6 +84,19 @@ class ApplicationController < ActionController::Base
         f.html { redirect_to root_path, :notice => "You are not authorized to access this page" }
         f.json { head symbol }
         f.xml  { head symbol }
+      end
+    end
+
+    def keep_alive user
+      if user.alive_time.nil?
+        user.alive_time = DateTime.now
+        logger.debug "Alive time updated"
+      else
+        if user.alive_time + 15.minutes < DateTime.now
+          user.alive_time = DateTime.now
+          user.save
+          logger.debug "Alive time updated"
+        end
       end
     end
 
