@@ -87,9 +87,12 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # Makes sure that users that are making requests often are "kept alive" so the
+    # crom task doesn't wipe them out.
     def keep_alive user
       if user.alive_time.nil?
         user.alive_time = DateTime.now
+        user.save
         logger.debug "Alive time updated"
       else
         if user.alive_time + 15.minutes < DateTime.now
