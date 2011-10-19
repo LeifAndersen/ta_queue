@@ -5,6 +5,7 @@ class Student < QueueUser
   field :in_queue, type: DateTime
 
   validates :location, :presence => true
+  validates :location, :length => { :within => 1..20 }
 
   validate :check_username_location, :on => :create
 

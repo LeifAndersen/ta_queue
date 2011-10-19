@@ -7,6 +7,7 @@ class QueueUser
   field :alive_time, type: DateTime
 
   validates :username, :token, :presence => true
+  validates :username, :length => { :within => 1..40 }
 
   def as_json options = {}
     output_hash

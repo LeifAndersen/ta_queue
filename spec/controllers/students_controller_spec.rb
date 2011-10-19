@@ -282,4 +282,47 @@ describe StudentsController do
       @student.in_queue.should be_nil
     end
   end
+
+  describe "Errors" do
+    it "create fails creating a student with a name longer than 40 characters" do
+      stud = Factory.attributes_for :student
+      stud[:username] = "a" * 41
+      post :create, { :board_id => @board.title, :student => stud }
+
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res['username'].should_not be_nil
+    end
+    
+    it "create succeeds creating a student with a name longer than 40 characters" do
+      stud = Factory.attributes_for :student
+      stud[:username] = "a" * 40
+      post :create, { :board_id => @board.title, :student => stud }
+
+      response.code.should == "201"
+    end
+
+    it "fails creating a student with a location longer than 20 characters" do
+      stud = Factory.attributes_for :student
+      stud[:location] = "a" * 21
+      post :create, { :board_id => @board.title, :student => stud }
+
+      response.code.should == "422"
+
+      res = decode response.body
+
+      res['location'].should_not be_nil
+
+    end
+
+    it "create succeeds creating a student with a location longer than 20 characters" do
+      stud = Factory.attributes_for :student
+      stud[:location] = "a" * 20
+      post :create, { :board_id => @board.title, :student => stud }
+
+      response.code.should == "201"
+    end
+  end
 end
