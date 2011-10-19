@@ -294,7 +294,7 @@ function Queue ()
         dataType : 'json',
         success : function (data)
         {
-          removeStudent(data,sid);
+          queryQueue();
         }
       });
     }
@@ -450,6 +450,7 @@ function Queue ()
         
       if (this.isTA == 'true')
       {
+      html += '<input type="button" class="accept" value="Accept"/>';
       html += '<input type="button" class="accept" value="Accept"/>';
       }
       
