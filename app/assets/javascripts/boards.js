@@ -66,21 +66,8 @@ function base64_encode (data) {
 
 $(document).ready(function() 
 {
-	// Set up the ajax headers.
-  //username = $('#user_id').val();
-  //password = $('#user_token').val();
-	//$.ajaxSetup(
-	//{
-	//	headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-  //             'Authorization': base64_encode(username + ":" + password)
-  //          }
-  
-  var q = new Queue();
+	var q = new Queue();
   q.queryQueue();
   q.addEventListeners2Queue();
   q.centerControlBar();
-	// Sets the interval for the browser to requery the database, and sets up
-	// the queue.
-	//set_interval(3000);
-	//queue_setup();
 });
