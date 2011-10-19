@@ -294,17 +294,29 @@ function Queue ()
         dataType : 'json',
         success : function (data)
         {
-          queryQueue();
+          acceptStudentSuccess(data);
         }
       });
     }
   }
   
+    this.acceptStudentSuccess = function (data)
+  {
+    $('#queue_list').children().each(function ()
+    {
+      var studentInfo = $(this).attr('id');
+      
+      if (studentInfo.search(data.id) != -1)
+      {
+        $(this).remove();
+      }
+    });
+  }
   /**
   * This function allows a TA to remove a student from the queue via AJAX. Only applies
   * to users who are TAs.
   */
-  this.removeStudent = function (data,sid)
+  this.removeStudent = function (sid)
   {
     with (this)
     {
@@ -317,22 +329,26 @@ function Queue ()
           'Authorization' : base64_encode(username + ":" + password)
         },
         dataType : 'json',
-        success : function (data)
+        success : function (data,textStatus)
         {
-          removeStudentSuccess(data);
+          removeStudentSuccess(data,textStatus);
         }
       });
     }
   }
   
-  /**
-  * This is really just a stub.
-  */
   this.removeStudentSuccess = function (data)
   {
-    this.queryQueue();
+    $('#queue_list').children().each(function ()
+    {
+      var studentInfo = $(this).attr('id');
+      
+      if (studentInfo.search(data.id) != -1)
+      {
+        $(this).remove();
+      }
+    });
   }
-  
   /*--------UTILITY FUNCTIONS-------------------------*/
   
   this.getDate = function ()
@@ -450,8 +466,10 @@ function Queue ()
         
       if (this.isTA == 'true')
       {
-      html += '<input type="button" class="accept" value="Accept"/>';
-      html += '<input type="button" class="accept" value="Accept"/>';
+        html += '<div class="ta_control">';
+        html += '<input type="button" class="accept" value="Accept"/>';
+        html += '<input type="button" class="remove" value="Remove"/>';
+        html += '</div>';
       }
       
       html += '</div>';
@@ -468,12 +486,19 @@ function Queue ()
       
     $('#queue_list').append(html);
     $('.scroll-pane').jScrollPane();
+    
     with (this)
     {
-      $('.accept').click(function ()
+      $('.student .accept').click(function ()
       {
-        var student_id = $(this).parent().attr('id');
+        var student_id = $(this).parents('.student').attr('id');
         acceptStudent(student_id);
+      });
+      
+      $('.student .remove').click(function ()
+      {
+        var student_id = $(this).parents('.student').attr('id');
+        removeStudent(student_id);
       });
     }
   }
