@@ -4,7 +4,7 @@ class QueueUser
   field :username, type: String
   field :token, type: String, default: -> { SecureRandom.uuid }
   field :location, type: String
-  field :alive_time, type: DateTime
+  field :alive_time, type: DateTime, default: -> { DateTime.now }
 
   validates :username, :token, :presence => true
   validates :username, :length => { :within => 1..40 }
