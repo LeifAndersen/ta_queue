@@ -11,13 +11,11 @@ class BoardsController < ApplicationController
   def create
       @board = Board.new(params[:board])
       @board.save
-
       respond_with @board
   end
 
   def update
     @board.update_attributes(params[:board])
-
     respond_with @board
   end
 
@@ -56,7 +54,6 @@ class BoardsController < ApplicationController
       if @board.nil?
         redirect_to root_path
       end
-        
     end
 
     def filter_users
@@ -73,7 +70,14 @@ class BoardsController < ApplicationController
       authorize!
       unless current_user && @board.queue_users.where(:_id => current_user.id).first
         respond_with do |f|
-          f.html { redirect_to board_login_path @board }
+
+          # This needs to be checked so that it doesn't get stuck in an infinite redirect
+          if current_user
+            f.html { redirect_to boards_path, :notice => "You are already logged into #{current_user.board.title}, please log out before entering another Board." }
+          else
+            f.html { redirect_to board_login_path @board }
+          end
+
           f.json { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
           f.xml  { render :json => { :error => "You are not authorized to access this board" }, :status => :unauthorized }
         end

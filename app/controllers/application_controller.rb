@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  #before_filter :authorize!
-
   private
 
     def current_user
@@ -79,11 +77,16 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def send_head_with symbol
+    # Helper for sending heads
+    def send_head_with symbol=nil, message=nil, path=nil
+      _message ||= "You are not authorized to access this page"
+      _symbol ||= :unauthorized
+      _path ||= root_path
+
       respond_with do |f|
-        f.html { redirect_to root_path, :notice => "You are not authorized to access this page" }
-        f.json { head symbol }
-        f.xml  { head symbol }
+        f.html { redirect_to _path, :notice => _message }
+        f.json { head _symbol }
+        f.xml  { head _symbol }
       end
     end
 

@@ -1,8 +1,11 @@
 :css
   body { font-family:"Helvetica"; }
+  .notice { background-color:yellow; padding:5px; };
 TA Queue List and Status
 %br
 %br
+- if flash[:notice]
+  .notice= flash[:notice]
 %table.board_status_table
   %tr
     %th TA queues
