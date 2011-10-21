@@ -27,9 +27,7 @@ function Queue ()
   
   this.active;
   
-  this.studentsInQueue = [];
   
-  this.tasInQueue = [];
 
   /*---------SETUP FUNCTIONS---------*/
   
@@ -46,11 +44,13 @@ function Queue ()
         {
           activateQueue(true);
           $(this).attr('value','Deactivate');
+          $('#freeze_queue').show();
         }
         else
         {
           activateQueue(false);
           $(this).attr('value','Activate');
+          $('#freeze_queue').hide();
         }
       });
     
@@ -66,6 +66,7 @@ function Queue ()
           freezeQueue(true);
           $(this).attr('value','Unfreeze');
         }
+        
       });
     
       $('#enter_queue').click(function ()
@@ -80,10 +81,10 @@ function Queue ()
           $(this).attr('value','Enter Queue');
           exitQueue();
         }
+        
       });
     }
-  }
-  
+  }  
   
   
   /*---------AJAX FUNCTIONS AND THEIR RESPECTIVE CALLBACKS--------*/
@@ -126,8 +127,8 @@ function Queue ()
   */
   this.queryQueueSuccess = function (data)
   {
-    this.active = data.active;
-    this.frozen = data.frozen;
+    this.active = data.active.toString();
+    this.frozen = data.frozen.toString();
   
     if (data.active && !data.frozen) // Active and not frozen
     {
@@ -148,7 +149,9 @@ function Queue ()
       this.updateTas(data.tas);
     }
     
+    this.updateControlButtons();
     this.updateQueuePosition();
+    this.centerControlBar();
   }
   
   /**
@@ -174,7 +177,7 @@ function Queue ()
         dataType : 'json',
         success : function (data)
         {
-          activateQueueSuccess(data);
+          activateQueueSuccess(data,isActive);
         }
       });
     }
@@ -183,9 +186,9 @@ function Queue ()
   /**
   * This function is a stub.
   */
-  this.activateQueueSuccess = function (data)
-  {
-  
+  this.activateQueueSuccess = function (data,isActive)
+  {    
+
   }
   
   /**
@@ -211,7 +214,7 @@ function Queue ()
        dataType : 'json',
        success : function (data)
        {
-         freezeQueueSuccess(data);
+         freezeQueueSuccess(data,isFrozen);
        }
       });
     }
@@ -220,9 +223,9 @@ function Queue ()
   /**
   * This is a function stub.
   */
-  this.freezeQueueSuccess = function (data)
+  this.freezeQueueSuccess = function (data,isFrozen)
   {
-  
+
   }
   
   /**
@@ -242,12 +245,17 @@ function Queue ()
           'Authorization' : base64_encode(username + ":" + password)
         },
         dataType : 'json',
-        success : function (data)
+        success : function ()
         {
-          //queryQueueSuccess(data);
+          enterQueueSuccess();
         }
       });
     }
+  }
+  
+  this.enterQueueSuccess = function ()
+  {
+
   }
   
   /**
@@ -267,9 +275,25 @@ function Queue ()
           'Authorization' : base64_encode(username + ":" + password)
         },
         dataType : 'json',
-        success : function (data)
+        success : function ()
         {
-          queryQueueSuccess(data);
+          exitQueueSuccess();
+        }
+      });
+    }
+  }
+  
+  this.exitQueueSuccess = function ()
+  {
+    with (this)
+    {
+      $('#queue_list').children().each(function ()
+      {
+        var studentInfo = $(this).attr('id');
+        
+        if (studentInfo.search(username) != -1)
+        {
+          $(this).remove();
         }
       });
     }
@@ -300,7 +324,7 @@ function Queue ()
     }
   }
   
-    this.acceptStudentSuccess = function (data)
+  this.acceptStudentSuccess = function (data)
   {
     $('#queue_list').children().each(function ()
     {
@@ -312,6 +336,7 @@ function Queue ()
       }
     });
   }
+  
   /**
   * This function allows a TA to remove a student from the queue via AJAX. Only applies
   * to users who are TAs.
@@ -413,10 +438,76 @@ function Queue ()
         }
       });
     }
- 
+
+    if (position == -1)
+    {
+      $('#enter_queue').attr('value','Enter Queue');    
+    }
+    
     return position+1;
   }
   /*---------VIEW UPDATE FUNCTIONS---------------------*/
+  
+  this.updateControlButtons = function ()
+  {
+    if (this.isTA == 'true')
+    {
+      
+      if (this.active == 'true')
+      {
+        $('#activate_queue').attr('value','Deactivate');
+        $('#freeze_queue').show();
+      }
+      else
+      {
+        $('#activate_queue').attr('value','Activate');
+        $('#freeze_queue').hide();
+      }
+      
+      if (this.frozen == 'true')
+      {
+        $('#freeze_queue').attr('value','Unfreeze');
+      }
+      else
+      {
+        $('#freeze_queue').attr('value','Freeze');
+      } 
+    }
+    else
+    {
+      if (this.active == 'true')
+      {
+        if (this.frozen == 'true')
+        {
+          if ($('#enter_queue').attr('value') == 'Exit Queue')
+          {
+            $('#enter_queue').show();
+            $('#sign_out').removeClass('sign_out_alone');
+            $('#sign_out').addClass('sign_out_with');
+          }
+          else
+          {
+            $('#enter_queue').hide();
+            $('#sign_out').removeClass('sign_out_with');
+            $('#sign_out').addClass('sign_out_alone');
+          }
+        }
+        else
+        {
+          $('#enter_queue').show();
+          $('#sign_out').removeClass('sign_out_alone');
+          $('#sign_out').addClass('sign_out_with');
+        }
+      }
+      else
+      {
+        $('#enter_queue').hide();
+        $('#sign_out').removeClass('sign_out_with');
+        $('#sign_out').addClass('sign_out_alone');
+        $('#enter_queue').attr('value','Enter Queue');
+      } 
+    }    
+  }
   
   this.updateQueuePosition = function ()
   {
@@ -556,7 +647,7 @@ function Queue ()
   {
     var parentWidth = $('#control_panel').innerWidth();
     var childWidth = $('#control_bar').innerWidth();
-    var margin = (parentWidth - childWidth)/2 + 17;
+    var margin = (parentWidth - childWidth)/2;
     
     $('#control_bar').css('margin-left',margin + 'px');
   }
@@ -570,7 +661,6 @@ function Queue ()
     html += '</div>';
   
     $('#queue_list').append(html);
-  }
-  
+  }  
   
 }
