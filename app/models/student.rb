@@ -34,9 +34,9 @@ class Student < QueueUser
   def exit_queue
     unless self.in_queue.nil?
       self.in_queue = nil
-      unless self.ta.nil?
-        self.ta = nil
-      end
+    end
+    unless self.ta.nil?
+      self.ta = nil
     end
   end
 

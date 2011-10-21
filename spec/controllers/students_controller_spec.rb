@@ -267,6 +267,7 @@ describe StudentsController do
 
       @student = Student.find(@student.id)
       @student.ta.should be_nil
+      @student.in_queue.should be_nil
     end
 
     it "ta_remove should properly remove a student from the queue" do
@@ -280,7 +281,10 @@ describe StudentsController do
       @student = Student.find(@student.id)
 
       @student.in_queue.should be_nil
+      @student.ta.should be_nil
     end
+
+
   end
 
   describe "Errors" do

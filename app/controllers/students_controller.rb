@@ -39,7 +39,6 @@ class StudentsController < ApplicationController
 
   def update
     @student.update_attributes(params[:student])
-
     respond_with @student
   end
 
