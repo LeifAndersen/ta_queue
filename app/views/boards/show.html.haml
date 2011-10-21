@@ -14,7 +14,7 @@
         #control_panel
           #control_bar
             - if @current_user.student?
-              %input{ :id => "enter_queue", :type => "button", :value => (@current_user.in_queue? ? "Exit Queue" : "Enter Queue") }
+              %input{ :id => "enter_queue", :type => "button", :value => (@current_user.in_queue.nil? ? "Enter Queue" : "Exit Queue"), :style => ((@board.active? and not @board.frozen?) ? "display: none;" : "display: inline;") } 
               = button_to "Sign out", board_student_path(@board, @current_user), :method => :delete, :id => "sign_out", :class => "sign_out_with"
             - else
               %input{ :id => "activate_queue", :type => "button", :value => (@board.active? ? "Deactivate" : "Activate") }
