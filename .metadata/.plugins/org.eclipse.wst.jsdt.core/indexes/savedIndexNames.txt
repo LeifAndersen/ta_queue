@@ -1,1 +1,0 @@
-INDEX VERSION 1.122+/home/andrew/TA_Queue_Assets/ta_queue/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
